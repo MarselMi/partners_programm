@@ -1,0 +1,621 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card mb-4">
+				<div class="card-body">
+					<form action="">
+						<div class="row">
+							<div class="col-12 col-sm-3 mb-3">
+								<label class="form-label">
+									Период
+								</label> <!-- /form-label -->
+								<div class="input-group">
+									<span class="input-group-text">С</span>
+									{% if req_data.start %}
+									<input class="form-control" type="text" name="start" value="{{ req_data.start }}" id="datepicker"/>
+									{% else %}
+									<input class="form-control" type="text" name="start" value="{{ start_seven }}" id="datepicker"/>
+									{% endif %}
+									<span class="input-group-text">По</span>
+									{% if req_data.end %}
+									<input class="form-control" type="text" name="end" value="{{ req_data.end }}" id="datepicker1"/>
+									{% else %}
+									<input class="form-control" type="text" name="end" value="{{ date_now }}" id="datepicker1"/>
+									{% endif %}
+								</div> <!-- /input-group -->
+							</div> <!-- /col -->
+
+
+							<div class="col-12 col-sm-3 mb-3">
+								<label for="StatFilterStream" class="form-label">
+									Поток
+								</label> <!-- /form-label -->
+								<input id="StatFilterStream" onfocus="this.value=''" onchange="this.blur();" name="stream_id" class="form-control filter_elements" autocomplete="off" placeholder="Выберите поток" list="datalistStreams" onclick="get_filter('stream_id')"
+								{% if data_filter.stream_id %} value="{{ data_filter.stream_id }}" {% endif %}>
+								<datalist id="datalistStreams" class="stream_id">
+								</datalist>
+							</div> <!-- /col -->
+
+
+							<div class="col-12 col-sm-3 mb-3">
+								<label for="StatFilterOffer" class="form-label">
+									Оффер
+								</label> <!-- /form-label -->
+
+								<input id="StatFilterOffer" onfocus="this.value=''" onchange="this.blur();" name="offer_id" class="form-control filter_elements" autocomplete="off" placeholder="Выберите оффер" list="datalistOffers" onclick="get_filter('offer_id')"
+								{% if data_filter.offer_id %} value="{{ data_filter.offer_id }}" {% endif %}>
+								<datalist id="datalistOffers" class="offer_id">
+								</datalist>
+							</div> <!-- /col -->
+
+
+							<div class="col-12 col-sm-3 mb-3">
+								<label for="StatFilterLanding" class="form-label">Лендинг</label> <!-- /form-label -->
+
+								<input id="StatFilterLanding" onfocus="this.value=''" onchange="this.blur();" name="landing_id" class="form-control filter_elements" autocomplete="off" placeholder="Выберите лендинг" list="datalistLanding" onclick="get_filter('landing_id')"
+								{% if data_filter.landing_id %} value="{{ data_filter.landing_id }}" {% endif %}>
+								<datalist id="datalistLanding" class="landing_id">
+								</datalist>
+							</div> <!-- /col -->
+						</div> <!-- /row -->
+
+
+
+						<div id="accordionStatsDaysFilter">
+
+							{% if collapsed == 2 %}
+							<div id="collapseStatsDaysFilter-1" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionStatsDaysFilter" style="">
+							{% else %}
+							<div id="collapseStatsDaysFilter-1" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionStatsDaysFilter" style="">
+							{% endif %}
+
+								<div class="row">
+									<div class="col-12 col-sm-3 mb-3">
+										<label for="StatFilterCountry" class="form-label">Страна</label> <!-- /form-label -->
+
+										<input id="StatFilterCountry" onfocus="this.value=''" onchange="this.blur();" name="country" class="form-control filter_elements" autocomplete="off" placeholder="Выберите страну" list="datalistCountry" onclick="get_filter('country')"
+										{% if data_filter.country %} value="{{ data_filter.country }}" {% endif %}>
+										<datalist id="datalistCountry" class="country">
+										</datalist>
+									</div> <!-- /col -->
+
+
+									<div class="col-12 col-sm-3 mb-3">
+										<label for="StatFilterDevice" class="form-label">
+											Тип устройства
+										</label> <!-- /form-label -->
+
+										<input id="StatFilterDevice" onfocus="this.value=''" onchange="this.blur();" name="device_type" class="form-control filter_elements" autocomplete="off" placeholder="Выберите тип устройства" list="datalistDevice"
+										{% if data_filter.device_type %} value="{{ data_filter.device_type }}" {% endif %}>
+										<datalist id="datalistDevice" class="device_type">
+											<option value="MOBILE">MOBILE</option>
+											<option value="DESKTOP">DESKTOP</option>
+										</datalist>
+
+									</div> <!-- /col -->
+
+
+									<div class="col-12 col-sm-2 mb-3">
+										<label for="StatFilterOS" class="form-label">OC</label> <!-- /form-label -->
+										<input id="StatFilterOS" onfocus="this.value=''" onchange="this.blur();" name="os" class="form-control filter_elements" autocomplete="off" placeholder="Выберите тип ОС" list="datalistOS"  onclick="get_filter('os')"
+										{% if data_filter.os %} value="{{ data_filter.os }}" {% endif %}>
+										<datalist id="datalistOS" class="os">
+										</datalist>
+									</div> <!-- /col -->
+
+
+									<div class="col-12 col-sm-2 mb-3">
+										<label for="StatFilterBrowser" class="form-label"> Браузер </label>
+										<input id="StatFilterBrowser" onfocus="this.value=''" onchange="this.blur();" name="browser" class="form-control filter_elements" autocomplete="off" placeholder="Выберите браузер" list="datalistBrowser"  onclick="get_filter('browser')"
+										{% if data_filter.browser %} value="{{ data_filter.browser }}" {% endif %}>
+										<datalist id="datalistBrowser" class="browser">
+										</datalist>
+									</div> <!-- /col -->
+
+
+									<div class="col-12 col-sm-2 mb-3">
+										<label for="StatFilterSource" class="form-label"> Источники </label>
+										<input id="StatFilterSource" onfocus="this.value=''" onchange="this.blur();" name="ref_domain" class="form-control filter_elements" autocomplete="off" placeholder="Выберите источник" list="datalistSource"  onclick="get_filter('ref_domain')"
+										{% if data_filter.ref_domain %} value="{{ data_filter.ref_domain }}" {% endif %}>
+										<datalist id="datalistSource" class="ref_domain">
+										</datalist>
+									</div> <!-- /col -->
+
+
+
+									<div class="col-12 col-sm-2 col-md-2 mb-3">
+										<label for="StatFilterSubAcс-1" class="form-label">
+											{{ form.sub_1.label }}
+										</label> <!-- /form-label -->
+										{% if data_filter.sub_1 %}
+											<input class="form-control filter_elements" onfocus="this.value=''" onchange="this.blur();" id="StatFilterSubAcс-1" autocomplete="off" name="sub_1" value="{{ data_filter.sub_1 }}" />
+										{% else %}
+											{{ form.sub_1 }}
+										{% endif %}
+									</div> <!-- /col -->
+
+
+									<div class="col-12 col-sm-2 col-md-2 mb-3">
+										<label for="StatFilterSubAcс-2" class="form-label">
+											{{ form.sub_2.label }}
+										</label> <!-- /form-label -->
+										{% if data_filter.sub_2 %}
+											<input class="form-control filter_elements" onfocus="this.value=''" onchange="this.blur();" id="StatFilterSubAcс-2" autocomplete="off" name="sub_2" value="{{ data_filter.sub_2 }}" />
+										{% else %}
+											{{ form.sub_2 }}
+										{% endif %}
+									</div> <!-- /col -->
+
+
+									<div class="col-12 col-sm-2 col-md-2 mb-3">
+										<label for="StatFilterSubAcс-3" class="form-label">
+											{{ form.sub_3.label }}
+										</label> <!-- /form-label -->
+										{% if data_filter.sub_3 %}
+											<input class="form-control filter_elements" onfocus="this.value=''" onchange="this.blur();" id="StatFilterSubAcс-3" autocomplete="off" name="sub_3" value="{{ data_filter.sub_3 }}" />
+										{% else %}
+											{{ form.sub_3 }}
+										{% endif %}
+									</div> <!-- /col -->
+
+
+									<div class="col-12 col-sm-2 col-md-3 mb-3">
+										<label for="StatFilterSubAcс-4" class="form-label">
+											{{ form.sub_4.label }}
+										</label> <!-- /form-label -->
+										{% if data_filter.sub_4 %}
+											<input class="form-control filter_elements" onfocus="this.value=''" onchange="this.blur();" id="StatFilterSubAcс-4" autocomplete="off" name="sub_4" value="{{ data_filter.sub_4 }}" />
+										{% else %}
+											{{ form.sub_4 }}
+										{% endif %}
+									</div> <!-- /col -->
+
+
+									<div class="col-12 col-sm-2 col-md-3 mb-3">
+										<label for="StatFilterSubAcс-5" class="form-label">
+											{{ form.sub_5.label}}
+										</label> <!-- /form-label -->
+										{% if data_filter.sub_5 %}
+											<input class="form-control filter_elements" onfocus="this.value=''" onchange="this.blur();" id="StatFilterSubAcс-5" autocomplete="off" name="sub_5" value="{{ data_filter.sub_5 }}" />
+										{% else %}
+											{{ form.sub_5 }}
+										{% endif %}
+									</div> <!-- /col -->
+
+
+									<div class="col-12 col-sm-2 col-md-2 mb-3">
+										<label for="StatFilterUTMSource" class="form-label">
+											{{ form.utm_source.label }}
+										</label> <!-- /form-label -->
+										{% if data_filter.utm_source %}
+											<input class="form-control filter_elements" onfocus="this.value=''" onchange="this.blur();" id="StatFilterUTMSource" autocomplete="off" name="utm_source" value="{{ data_filter.utm_source }}" />
+										{% else %}
+											{{ form.utm_source }}
+										{% endif %}
+									</div> <!-- /col -->
+
+
+									<div class="col-12 col-sm-2 col-md-2 mb-3">
+										<label for="StatFilterUTMMedium" class="form-label">
+											{{ form.utm_medium.label }}
+										</label> <!-- /form-label -->
+										{% if data_filter.utm_medium %}
+											<input class="form-control filter_elements" onfocus="this.value=''" onchange="this.blur();" id="StatFilterUTMMedium" autocomplete="off" name="utm_medium" value="{{ data_filter.utm_medium }}" />
+										{% else %}
+											{{ form.utm_medium }}
+										{% endif %}
+									</div> <!-- /col -->
+
+
+									<div class="col-12 col-sm-2 col-md-2 mb-3">
+										<label for="StatFilterUTMCampaign" class="form-label">
+											{{ form.utm_campaign.label }}
+										</label> <!-- /form-label -->
+										{% if data_filter.utm_campaign %}
+											<input class="form-control filter_elements" onfocus="this.value=''" onchange="this.blur();" id="StatFilterUTMCampaign" autocomplete="off" name="utm_campaign" value="{{ data_filter.utm_campaign }}" />
+										{% else %}
+											{{ form.utm_campaign }}
+										{% endif %}
+									</div> <!-- /col -->
+
+
+									<div class="col-12 col-sm-2 col-md-3 mb-3">
+										<label for="StatFilterUTMContent" class="form-label">
+											{{ form.utm_content.label }}
+										</label> <!-- /form-label -->
+										{% if data_filter.utm_content %}
+											<input class="form-control filter_elements" onfocus="this.value=''" onchange="this.blur();" id="StatFilterUTMContent" autocomplete="off" name="utm_content" value="{{ data_filter.utm_content }}" />
+										{% else %}
+											{{ form.utm_content }}
+										{% endif %}
+									</div> <!-- /col -->
+
+
+									<div class="col-12 col-sm-2 col-md-3 mb-3">
+										<label for="StatFilterUTMTerm" class="form-label">
+											{{ form.utm_term.label }}
+										</label> <!-- /form-label -->
+										{% if data_filter.utm_term %}
+											<input class="form-control filter_elements" onfocus="this.value=''" onchange="this.blur();" id="StatFilterUTMTerm" autocomplete="off" name="utm_term" value="{{ data_filter.utm_term }}" />
+										{% else %}
+											{{ form.utm_term }}
+										{% endif %}
+									</div> <!-- /col -->
+								</div> <!-- /row -->
+							</div> <!-- /accordion-collapse -->
+						</div> <!-- /accordion -->
+
+
+						<div class="row">
+							<div class="col-12 text-end" id="flush-headingOne">
+
+								<a onclick="reset_filter()" class="btn btn-light me-3 button-show-filter">
+									Сбросить
+								</a>
+
+								{% if collapsed == 2 %}
+								<button onclick="$(this).text($(this).text() == 'Скрыть' ? 'Раскрыть' : 'Скрыть'); checkCollapse()" type="button" class="btn btn-secondary text-white collapsed" data-bs-toggle="collapse" data-bs-target="#collapseStatsDaysFilter-1" aria-expanded="false" aria-controls="collapseStatsDaysFilter-1">Раскрыть</button>
+								{% else %}
+								<button onclick="$(this).text($(this).text() == 'Раскрыть' ? 'Скрыть' : 'Раскрыть'); checkCollapse()" type="button" class="btn btn-secondary text-white" data-bs-toggle="collapse" data-bs-target="#collapseStatsDaysFilter-1" aria-expanded="true" aria-controls="collapseStatsDaysFilter-1">Скрыть</button>
+								{% endif %}
+
+								<button type="submit" id="button_id" class="btn btn-primary ms-3">
+									Показать
+								</button>
+							</div>
+						</div> <!-- /row -->
+					</form>
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!--/row-->
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card mb-4">
+				<div class="card-body">
+
+					<div class="table-responsive table-maxh-stats">
+						<table class="table table-bordered text-nowrap mb-0">
+							<thead>
+								<tr>
+									<th rowspan="2">
+										id пдп
+									</th>
+									<th rowspan="2">
+										Поток
+									</th>
+									<th colspan="4" class="text-center">
+										Дата
+									</th>
+									<th colspan="3" class="text-center">
+										Ребиллы
+									</th>
+									<th rowspan="2">
+										Тариф
+									</th>
+									<th rowspan="2">
+										Банк
+									</th>
+									<th rowspan="2">
+										Статус
+									</th>
+									<th rowspan="2">
+										Доход
+									</th>
+								</tr>
+								<tr>
+									<th>
+										Регистрация
+									</th>
+									<th>
+										Подписка
+									</th>
+									<th>
+										Ребилл
+									</th>
+									 <th>
+										След. ребилл
+									</th>
+									<th>
+										Отписка
+									</th>
+									<th>
+										Успешных
+									</th>
+									<th>
+										Неуспешных
+									</th>
+									<th>
+										Всего
+									</th>
+								</tr>
+							</thead>
+							{% for data in table_data %}
+							<tbody>
+							<tr>
+								<td>
+									<span data-bs-toggle="tooltip" data-bs-title="{{ data.id }}">{{ data.id|truncatechars:10 }}</span>
+									<span onclick="copyTextToClipboard( '{{ data.id }}' ); return false;" type="button" class="small ms-1" data-bs-toggle="tooltip" data-bs-title="Скопировать id пдп">
+										<i class="fa-regular fa-clipboard"></i>
+									</span>
+								</td>
+								<td>
+									{{ data.stream }}
+								</td>
+								<td>
+									{{ data.registration|date_change }}
+								</td>
+								<td>
+									{% if data.subscribe_date %}
+										{{ data.subscribe_date|date_change }}
+									{% else %}
+										&ndash;
+									{% endif %}
+								</td>
+								<td>
+									{% if data.rebill %}
+										{{ data.rebill|date_change }}
+									{% else %}
+										&ndash;
+									{% endif %}
+								</td>
+								 <td>
+									{% if data.next_rebill %}
+										{{ data.next_rebill|date_change }}
+									{% else %}
+										&ndash;
+									{% endif %}
+								</td>
+								<td>
+									{% if data.unsub %}
+										{{ data.unsub|date_change }}
+									{% else %}
+										&ndash;
+									{% endif %}
+								</td>
+								<td>
+									{{ data.rebills_good }}
+								</td>
+								<td>
+									{{ data.rebills_bad }}
+								</td>
+								<td>
+									{{ data.rebills_total }}
+								</td>
+								<td>
+									{{ data.tarif }}
+								</td>
+								<td>
+									{% if data.bank %}
+										{{ data.bank }}
+									{% else %}
+										&ndash;
+									{% endif %}
+								</td>
+								<td>
+									{% if data.unsub %}
+										<div class="badge bg-danger d-flex align-items-center justify-content-center rounded-pill ms-auto my-auto">
+											Отписана
+										</div>
+									{% else %}
+										{% if data.try_count == 1 %}
+											<div class="badge bg-secondary d-flex align-items-center justify-content-center rounded-pill ms-auto my-auto">
+												Просрочена
+											</div>
+										{% endif %}
+										{% if data.try_count > 1 %}
+											<div class="badge bg-warning d-flex align-items-center justify-content-center rounded-pill ms-auto my-auto">
+												Неребильная
+											</div>
+										{% endif %}
+										{% if data.try_count == 0 %}
+											<div class="badge bg-success d-flex align-items-center justify-content-center rounded-pill ms-auto my-auto">
+												Активна
+											</div>
+										{% endif %}
+									{% endif %}
+								</td>
+								<td>
+									{{ data.profit|numb_format }}
+								</td>
+							</tr>
+							{% endfor %}
+							</tbody>
+							<tfoot class="table-light">
+							<tr>
+								<th>
+									Итого
+								</th>
+								<th>
+								</th>
+								<th>
+								</th>
+								<th>
+								</th>
+								<th>
+								</th>
+								<th>
+								</th>
+								<th>
+								</th>
+								<th>
+									{{ sum_rebills_good|numb_format }}
+								</th>
+								<th>
+									{{ sum_rebills_bad|numb_format }}
+								</th>
+								<th>
+									{{ sum_rebills_total|numb_format }}
+								</th>
+								<th>
+								</th>
+								<th>
+								</th>
+								<th>
+								</th>
+								<th>
+									{{ sum_profite|numb_format }}
+								</th>
+							</tr>
+							</tfoot>
+						</table> <!-- /table -->
+					</div> <!-- /table-responsive -->
+
+					{% include 'pagin_menu.html' %}
+
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!-- /row -->
+
+
+	<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+
+	<script>
+		'use strict'
+		var filters = [];
+
+<!--		window.onload = function() {-->
+<!--			var onloadData = ['stream_id', 'offer_id', 'landing_id', 'country', 'os', 'browser', 'ref_domain'];-->
+<!--			for (let i = 0; i < onloadData.length; i++) {-->
+<!--				get_filter(onloadData[i]);-->
+<!--			};-->
+<!--		}-->
+
+		var url = document.location.href;
+		var a = document.cookie.split(';');
+		var token = '';
+
+		for (let i = 0; i < a.length; i++) {
+			var b = a[i].split('=');
+			b[0] = b[0].replace(/\s+/g, '');
+			if (b[0] == 'csrftoken') {
+				token = b[1];
+			}
+		};
+
+		var btnLimEl = document.querySelectorAll('.checkLimitButton');
+
+		for (let i = 0; i < btnLimEl.length; i++){
+			btnLimEl[i].addEventListener('click', function(event) {
+				if (event.target == btnLimEl[i]){
+					$.ajax({
+						url: url,
+						method: 'POST',
+						data: {
+							csrfmiddlewaretoken: token,
+							type: 'page_limit',
+							limit: btnLimEl[i].getAttribute("name")
+						}
+					}).then(function(result) {
+						var x = document.location.search.split('&page')[0];
+					    x = x.split('?page')[0];
+					    document.location.href = document.location.origin + document.location.pathname + x;
+					}).catch(function(err) {
+						var x = 1;
+					})
+				}
+			})
+		};
+
+		function get_filter(filter_name){
+			if (filter_name in filters){
+				var z = 1;
+			}else{
+				filters[filter_name] = 1;
+				$.ajax(
+					{
+						url: url,
+						method: 'POST',
+						data: {
+							csrfmiddlewaretoken: token,
+							type: filter_name
+						}
+					}
+				).then(function(result) {
+					var response = JSON.parse(result);
+					var inputEl = $(`input[name="${filter_name}"]`)
+					var datalistElement = $(`.${filter_name}`);
+					datalistElement.empty();
+					for (let i = 0; i < response.length; i++){
+						var optionEl = `<option value="${response[i].name}">`
+						datalistElement.append(optionEl)
+					}
+				}).catch(function(err) {
+					var x = 0
+				});
+			}
+
+		};
+	
+		function checkCollapse() {
+			$.ajax({
+				url: url,
+				method: 'GET',
+				data: {
+					csrfmiddlewaretoken: token,
+					collapse: 1
+				}
+			}).then(function(result) {
+				var x = 1;
+			}).catch(function(err) {
+				var x = 1;
+			});
+		};
+		
+		var filterEl = $('.filter_elements');
+
+		var butt = $('.button-show-filter');
+		var v = 0;
+
+		function chec_array() {
+			for (let i = 0; i < filterEl.length; i++) {
+				if (filterEl[i].value) {
+					++v;
+				}
+			} return v
+		};
+
+		if (chec_array()) {
+			butt.show()
+		} else {
+			butt.hide()
+		};
+
+		function reset_filter(event) {
+			for (let i = 0; i < filterEl.length; i++) {
+				filterEl[i].value = '';
+			}
+		};
+		
+		var dirtly_url = new URL(location);
+		var dirtly_params = dirtly_url.searchParams;
+		var new_params = '?';
+
+		dirtly_params.forEach((val, key) =>{
+			if (val){
+				new_params += key+'='+val+'&';
+			}
+		});
+
+		new_params = new_params.slice(0, -1);
+
+		var new_url = new URL(new_params, location);
+
+		if(new_params){
+			history.pushState(null, null, new_url);
+		};
+
+	</script>
+
+	<script type="text/javascript">
+		$(function(){
+			$("#datepicker").datepicker();
+			$("#datepicker1").datepicker({maxDate: '0'});
+		});
+	</script>
+{% endblock content %}

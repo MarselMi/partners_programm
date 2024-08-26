@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" class="h-100">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>{{ title }}</title>
+
+	<link rel="icon" href="https://cdn-app.offering.pro/static/img/brand/favicon.png" type="image/x-icon"/>
+
+	<!-- css -->
+	<link rel="stylesheet" href="https://cdn-app.offering.pro/static/css/bootstrap-2.css?v=2">
+	<link rel="stylesheet" href="https://cdn-app.offering.pro/static/css/all.min.css">
+</head>
+<body class="auth-page d-flex h-100">
+
+
+<div class="container-fluid m-auto">
+	<div class="row">
+		<main class="col-md-6 mx-auto col-lg-4 px-md-4 pt-3 pb-3">
+			<div class="card rounded-5 shadow-lg">
+				<div class="navbar-brand anim-up-dn pt-5 pb-0 ps-5 pe-5">
+					<img src="https://cdn-app.offering.pro/static/img/brand/logo-1.svg" alt="">
+				</div> <!--/navbar-brand-->
+
+
+				<div class="card-body pt-5 pb-5 ps-5 pe-5 text-center">
+					<h1 class="h3 pb-3 mb-4 border-bottom">
+						Упс...
+					</h1> <!-- /title -->
+
+					<p>
+						Аккаунт заблокирован за нарушения правил.
+					</p>
+				</div> <!-- /card-body -->
+
+				<div class="card-footer text-center">
+					<a href="{% url 'logout' %}">
+						Выйти из аккаунта
+					</a>
+				</div> <!-- /card-footer -->
+			</div> <!-- /card -->
+		</main> <!-- /content -->
+	</div> <!-- /row -->
+</div> <!-- /container-fluid -->
+
+
+</body>
+</html>

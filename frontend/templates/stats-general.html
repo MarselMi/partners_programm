@@ -1,0 +1,636 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card px-3 ps-4 mb-4">
+				<div class="row">
+					<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xxl-3">
+						<div class="row border-end bd-xs-e-0 p-3">
+							<div class="col-3 d-flex align-items-center justify-content-center">
+								<div class="bg-primary justify-content-center align-items-center d-flex shadow-lg anim-up-dn rounded-pill" style="width: 40px; height: 40px;">
+									<i class="fa-solid fa-users text-white small"></i>
+								</div>
+							</div> <!-- /col -->
+
+							<div class="col-9 py-0">
+								<div class="pt-4 pb-3">
+									<div class="d-flex">
+										<div class="h6 mb-2 small">
+											Регистрации
+										</div>
+										{% if dif.dif_reg_stat > 0 %}
+										<span class="badge text-bg-outline-success d-flex align-items-center rounded-pill ms-auto my-auto">
+											<i class="fa-solid fa-caret-up me-1"></i>
+											{{ dif.dif_reg_stat }}%
+										</span>
+										{% elif dif.dif_reg_stat < 0 %}
+										<span class="badge text-bg-outline-danger d-flex align-items-center rounded-pill ms-auto my-auto">
+											<i class="fa-solid fa-caret-down me-1"></i>
+											{{ dif.dif_reg_stat|cut:"-" }}%
+										</span>
+										{% else %}
+										<span class="badge text-bg-outline-secondary d-flex align-items-center rounded-pill ms-auto my-auto">
+											{{ dif.dif_reg_stat }}%
+										</span>
+										{% endif %}
+									</div>
+
+									<div class="pb-0 mt-0">
+										<div class="d-flex">
+											<div class="fs-5 fw-light mb-0">
+												{{ general_stat.stat_registrations|numb_format }}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div> <!-- /col -->
+						</div> <!-- /row -->
+					</div> <!-- /col -->
+
+
+					<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xxl-3">
+						<div class="row border-end bd-md-e-0 bd-xs-e-0 bd-lg-e-0 bd-xl-e-0 p-3">
+							<div class="col-3 d-flex align-items-center justify-content-center">
+								<div class="bg-info justify-content-center align-items-center d-flex shadow-lg anim-up-dn rounded-pill" style="width: 40px; height: 40px;">
+									<i class="fa-solid fa-user-check text-white small"></i>
+								</div>
+							</div> <!-- /col -->
+
+							<div class="col-9">
+								<div class="pt-4 pb-3">
+									<div class="d-flex">
+										<div class="h6 mb-2 small">
+											Активации
+										</div>
+										{% if dif.dif_act_stat > 0 %}
+										<span class="badge text-bg-outline-success d-flex align-items-center rounded-pill ms-auto my-auto">
+											<i class="fa-solid fa-caret-up me-1"></i>
+											{{ dif.dif_act_stat }}%
+										</span>
+										{% elif dif.dif_act_stat < 0 %}
+										<span class="badge text-bg-outline-danger d-flex align-items-center rounded-pill ms-auto my-auto">
+											<i class="fa-solid fa-caret-down me-1"></i>
+											{{ dif.dif_act_stat|cut:"-" }}%
+										</span>
+										{% else %}
+										<span class="badge text-bg-outline-secondary d-flex align-items-center rounded-pill ms-auto my-auto">
+											{{ dif.dif_act_stat }}%
+										</span>
+										{% endif %}
+									</div>
+
+									<div class="pb-0 mt-0">
+										<div class="d-flex">
+											<div class="fs-5 fw-light mb-0">
+												{{ general_stat.stat_activations|numb_format }}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div> <!-- /col -->
+						</div> <!-- /row -->
+					</div> <!-- /col -->
+
+
+					<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xxl-3">
+						<div class="row border-end bd-xs-e-0 p-3">
+							<div class="col-3 d-flex align-items-center justify-content-center">
+								<div class="bg-success justify-content-center align-items-center d-flex shadow-lg anim-up-dn rounded-pill" style="width: 40px; height: 40px;">
+									<i class="fa-solid fa-user-plus text-white small"></i>
+								</div>
+							</div> <!-- /col -->
+
+							<div class="col-9">
+								<div class="pt-4 pb-3">
+									<div class="d-flex">
+										<div class="h6 mb-2 small">
+											Подписки
+										</div>
+										{% if dif.dif_sub_stat > 0 %}
+										<span class="badge text-bg-outline-success d-flex align-items-center rounded-pill ms-auto my-auto">
+											<i class="fa-solid fa-caret-up me-1"></i>
+											{{ dif.dif_sub_stat }}%
+										</span>
+										{% elif dif.dif_sub_stat < 0 %}
+										<span class="badge text-bg-outline-danger d-flex align-items-center rounded-pill ms-auto my-auto">
+											<i class="fa-solid fa-caret-down me-1"></i>
+											{{ dif.dif_sub_stat|cut:"-" }}%
+										</span>
+										{% else %}
+										<span class="badge text-bg-outline-secondary d-flex align-items-center rounded-pill ms-auto my-auto">
+											{{ dif.dif_sub_stat }}%
+										</span>
+										{% endif %}
+									</div>
+
+									<div class="pb-0 mt-0">
+										<div class="d-flex">
+											<div class="fs-5 fw-light mb-0">
+												{{ general_stat.stat_subscribes|numb_format }}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div> <!-- /col -->
+						</div> <!-- /row -->
+					</div> <!-- /col -->
+
+
+					<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xxl-3">
+						<div class="row p-3">
+							<div class="col-3 d-flex align-items-center justify-content-center">
+								<div
+									class="bg-warning justify-content-center align-items-center d-flex shadow-lg anim-up-dn rounded-pill" style="width: 40px; height: 40px;">
+									<i class="fa-solid fa-bell text-white small"></i>
+								</div>
+							</div> <!-- /col -->
+
+							<div class="col-9">
+								<div class="pt-4 pb-3">
+									<div class="d-flex">
+										<div class="h6 mb-2 small">
+											Ребиллы
+										</div>
+										{% if dif.dif_reb_stat > 0 %}
+										<span class="badge text-bg-outline-success d-flex align-items-center rounded-pill ms-auto my-auto">
+											<i class="fa-solid fa-caret-up me-1"></i>
+											{{ dif.dif_reb_stat }}%
+										</span>
+										{% elif dif.dif_reb_stat < 0 %}
+										<span class="badge text-bg-outline-danger d-flex align-items-center rounded-pill ms-auto my-auto">
+											<i class="fa-solid fa-caret-down me-1"></i>
+											{{ dif.dif_reb_stat|cut:"-" }}%
+										</span>
+										{% else %}
+										<span class="badge text-bg-outline-secondary d-flex align-items-center rounded-pill ms-auto my-auto">
+											{{ dif.dif_reb_stat }}%
+										</span>
+										{% endif %}
+									</div>
+
+									<div class="pb-0 mt-0">
+										<div class="d-flex">
+											<div class="fs-5 fw-light mb-0">
+												{{ general_stat.stat_rebills|numb_format }}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div> <!-- /col -->
+						</div> <!-- /row -->
+					</div> <!-- /col -->
+				</div> <!-- /row -->
+			</div> <!-- /card -->
+
+
+			<div class="card mb-4">
+				<div class="card-header card-header-no-bg border-bottom-0">
+					<div class="card-title h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-0">
+						Почасовая статистика
+					</div> <!-- /card-title -->
+				</div> <!-- /card-header -->
+
+				<div id="hours_stat_today" hidden>{{ hours_stat_today }}</div>
+				<div id="hours_stat_yesterday" hidden>{{ hours_stat_yesterday }}</div>
+
+				<div class="card-body">
+					<div id="statistics1"></div>
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+
+
+			<div class="card mb-4">
+				<div class="card-header card-header-no-bg border-bottom-0">
+					<div class="card-title h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-0">
+						Статистика за последние 7 дней
+					</div> <!-- /card-title -->
+				</div> <!-- /card-header -->
+
+
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-bordered text-nowrap mb-0">
+							<thead>
+								<tr class="text-center">
+									<th>Дата</th>
+									<th>Хосты</th>
+									<th>Регистрации</th>
+									<th>Активации</th>
+									<th>Подписки</th>
+									<th>Ребиллы</th>
+									<th>Неусп. Ребиллы</th>
+									<th>Отписки</th>
+									<th>Доход</th>
+								</tr>
+							</thead>
+							<tbody>
+							{% for key, val in gen_seven_days_stat.items %}
+							<tr>
+								<td class="text-center">{{ key }}</td>
+								<td>
+									<div class="d-flex">
+										{{ val.hosts|numb_format }}
+										{% if val.hosts_proc > 0 %}
+										<span class="badge text-bg-outline-success d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-up me-1"></i>
+											{{ val.hosts_proc }}%
+										</span>
+										{% elif val.hosts_proc < 0 %}
+										<span class="badge text-bg-outline-danger d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-down me-1"></i>
+											{{ val.hosts_proc|cut:"-" }}%
+										</span>
+										{% elif val.hosts_proc == 0 %}
+										<span class="badge text-bg-outline-secondary d-flex align-items-center rounded-pill ms-auto">
+											{{ val.hosts_proc }}%
+										</span>
+										{% endif %}
+									</div>
+								</td>
+								<td>
+									<div class="d-flex">
+										{{ val.registrations|numb_format  }}
+										{% if val.registr_proc > 0 %}
+										<span class="badge text-bg-outline-success d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-up me-1"></i>
+											{{ val.registr_proc }}%
+										</span>
+										{% elif val.registr_proc < 0 %}
+										<span class="badge text-bg-outline-danger d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-down me-1"></i>
+											{{ val.registr_proc|cut:"-" }}%
+										</span>
+										{% elif val.registr_proc == 0 %}
+										<span class="badge text-bg-outline-secondary d-flex align-items-center rounded-pill ms-auto">
+											{{ val.registr_proc }}%
+										</span>
+										{% endif %}
+									</div>
+								</td>
+								<td>
+									<div class="d-flex">
+										{{ val.activations|numb_format  }}
+										{% if val.activ_proc > 0 %}
+										<span class="badge text-bg-outline-success d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-up me-1"></i>
+											{{ val.activ_proc }}%
+										</span>
+										{% elif val.activ_proc < 0 %}
+										<span class="badge text-bg-outline-danger d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-down me-1"></i>
+											{{ val.activ_proc|cut:"-" }}%
+										</span>
+										{% elif val.activ_proc == 0 %}
+										<span class="badge text-bg-outline-secondary d-flex align-items-center rounded-pill ms-auto">
+											{{ val.activ_proc }}%
+										</span>
+										{% endif %}
+									</div>
+								</td>
+								<td>
+									<div class="d-flex">
+										<a href="{% url 'stat_subs' %}?start={{ key }}&end={{ key }}">{{ val.subscribes|numb_format  }}</a>
+										{% if val.subsc_proc > 0 %}
+										<span class="badge text-bg-outline-success d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-up me-1"></i>
+											{{ val.subsc_proc }}%
+										</span>
+										{% elif val.subsc_proc < 0 %}
+										<span class="badge text-bg-outline-danger d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-down me-1"></i>
+											{{ val.subsc_proc|cut:"-" }}%
+										</span>
+										{% elif val.subsc_proc == 0 %}
+										<span class="badge text-bg-outline-secondary d-flex align-items-center rounded-pill ms-auto">
+											{{ val.subsc_proc }}%
+										</span>
+										{% endif %}
+									</div>
+								</td>
+								<td>
+									<div class="d-flex">
+										<a href="{% url 'stat_rebills' %}?start={{ key }}&end={{ key }}">{{ val.rebills|numb_format  }}</a>
+										{% if val.rebills_proc > 0 %}
+										<span class="badge text-bg-outline-success d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-up me-1"></i>
+											{{ val.rebills_proc }}%
+										</span>
+										{% elif val.rebills_proc < 0 %}
+										<span class="badge text-bg-outline-danger d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-down me-1"></i>
+											{{ val.rebills_proc|cut:"-" }}%
+										</span>
+										{% elif val.rebills_proc == 0 %}
+										<span class="badge text-bg-outline-secondary d-flex align-items-center rounded-pill ms-auto">
+											{{ val.rebills_proc }}%
+										</span>
+										{% endif %}
+									</div>
+								</td>
+								<td>
+									<div class="d-flex">
+										{{ val.bad_rebills|numb_format  }}
+										{% if val.bad_rebills_proc > 0 %}
+										<span class="badge text-bg-outline-success d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-up me-1"></i>
+											{{ val.bad_rebills_proc }}%
+										</span>
+										{% elif val.bad_rebills_proc < 0 %}
+										<span class="badge text-bg-outline-danger d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-down me-1"></i>
+											{{ val.bad_rebills_proc|cut:"-" }}%
+										</span>
+										{% elif val.bad_rebills_proc == 0 %}
+										<span class="badge text-bg-outline-secondary d-flex align-items-center rounded-pill ms-auto">
+											{{ val.bad_rebills_proc }}%
+										</span>
+										{% endif %}
+									</div>
+								</td>
+								<td>
+									<div class="d-flex">
+										<a href="{% url 'stat_unsubs' %}?start={{ key }}&end={{ key }}">{{ val.unsubscribes|numb_format  }}</a>
+										{% if val.unsub_proc > 0 %}
+										<span class="badge text-bg-outline-danger d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-up me-1"></i>
+											{{ val.unsub_proc }}%
+										</span>
+										{% elif val.unsub_proc < 0 %}
+										<span class="badge text-bg-outline-success d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-down me-1"></i>
+											{{ val.unsub_proc|cut:"-" }}%
+										</span>
+										{% elif val.unsub_proc == 0 %}
+										<span class="badge text-bg-outline-secondary d-flex align-items-center rounded-pill ms-auto">
+											{{ val.unsub_proc }}%
+										</span>
+										{% endif %}
+									</div>
+								</td>
+								<td>
+									<div class="d-flex">
+										{{ val.profit|numb_format }}
+										{% if val.prof_proc > 0 %}
+										<span class="badge text-bg-outline-success d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-up me-1"></i>
+											{{ val.prof_proc }}%
+										</span>
+										{% elif val.prof_proc < 0 %}
+										<span class="badge text-bg-outline-danger d-flex align-items-center rounded-pill ms-auto">
+											  <i class="fa-solid fa-caret-down me-1"></i>
+											{{ val.prof_proc|cut:"-" }}%
+										</span>
+										{% elif val.prof_proc == 0 %}
+										<span class="badge text-bg-outline-secondary d-flex align-items-center rounded-pill ms-auto">
+											{{ val.prof_proc }}%
+										</span>
+										{% endif %}
+									</div>
+								</td>
+							</tr>
+							{% endfor %}
+							</tbody>
+							<tfoot>
+								<tr>
+									<th class="text-center">Всего</th>
+									<th>{{ sum_stat.sum_hosts|numb_format }}</th>
+									<th>{{ sum_stat.sum_registrations|numb_format }}</th>
+									<th>{{ sum_stat.sum_activations|numb_format }}</th>
+									<th>{{ sum_stat.sum_subscribes|numb_format }}</th>
+									<th>{{ sum_stat.sum_rebills|numb_format }}</th>
+									<th>{{ sum_stat.sum_bad_rebills|numb_format }}</th>
+									<th>{{ sum_stat.sum_unsubscribes|numb_format }}</th>
+									<th>{{ sum_stat.sum_profit|numb_format }}</th>
+								</tr>
+							</tfoot>
+						</table> <!-- /table -->
+					</div> <!-- /table-responsive -->
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!-- /row -->
+
+	<div class="row">
+		<div class="col-12 col-md-6">
+			<div class="card mb-4">
+				<div class="card-header card-header-no-bg border-bottom-0">
+					<div class="card-title h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-0">
+						Потоки
+					</div> <!-- /card-title -->
+				</div> <!-- /card-header -->
+
+
+				<div class="card-body">
+					{% if streams %}
+					<div class="table-responsive">
+						<table class="table table-bordered text-nowrap mb-0">
+							<thead>
+							<tr>
+								<th>ID</th>
+								<th>Название</th>
+								<th>Создан</th>
+								<th>Изменён</th>
+							</tr>
+							</thead>
+							{% for stream in streams %}
+							<tbody>
+							<tr class="align-middle">
+									<td>
+										{{ stream.uid }}
+									</td>
+									<td>
+										<div class="d-flex">
+											{{ stream.name }}
+											<a href="{% url 'days' %}?stream_id={{ stream.name }}" class="btn btn-light btn-sm ms-auto" data-bs-toggle="tooltip" data-bs-title="Статистика">
+											  <i class="fa-regular fa-chart-mixed"></i>
+											</a>
+										</div>
+									</td>
+									<td>{{ stream.created|date_change }}</td>
+
+									{% if stream.change_date %}
+									<td>{{ stream.change_date|date_change }}</td>
+									{% else %}
+									<td>&ndash;</td>
+									{% endif %}
+								</tr>
+							</tbody>
+							{% endfor %}
+						</table><!-- /table -->
+					</div><!-- /table-responsive -->
+					{% else %}
+					<div class="alert alert-warning d-flex align-items-center mb-0" role="alert">
+						<i class="fa-solid fa-triangle-exclamation me-2"></i>
+						<div>
+							Потоки не найдены
+						</div>
+					</div>
+					{% endif %}
+				</div>
+				<!-- /card-body -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+
+
+		<div class="col-12 col-md-6">
+			<div class="card mb-4">
+				<div class="card-header card-header-no-bg border-bottom-0">
+					<div class="card-title h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-0">
+						Постбэки
+					</div> <!-- /card-title -->
+				</div> <!-- /card-header -->
+
+
+				<div class="card-body">
+					{% if postbacks %}
+					<div class="table-responsive">
+						<table class="table table-bordered text-nowrap mb-0">
+							<thead>
+							<tr>
+								<th>ID</th>
+								<th>Название</th>
+								<th>Создан</th>
+								<th>Изменён</th>
+								<th>Метод</th>
+								<th>События</th>
+							</tr>
+							</thead>
+							{% for postback in postbacks %}
+							<tbody>
+								<tr>
+									<td>{{ postback.id }}</td>
+									<td>
+										<div class="d-flex">
+											{{ postback.name }}
+											<a href="{% url 'logs_postback' postback_id=postback.id %}" class="btn btn-light btn-sm ms-auto" data-bs-toggle="tooltip" data-bs-title="Логи">
+											  <i class="fa-regular fa-memo-circle-info"></i>
+											</a>
+										</div>
+									</td>
+									<td>{{ postback.created|date_change }}</td>
+
+									{% if postback.change_date == None %}
+									<td>&ndash;</td>
+									{% else %}
+									<td>{{ postback.change_date|date_change }}</td>
+									{% endif %}
+
+									<td>{{ postback.method }}</td>
+									<td>
+										{% for event in postback.event_id %}
+										<option>{{ event|postback_event }}</option>
+										{% endfor %}
+									</td>
+								</tr>
+							</tbody>
+							{% endfor %}
+						</table>
+					</div>
+					{% else %}
+					<div class="alert alert-warning d-flex align-items-center mb-0" role="alert">
+						<i class="fa-solid fa-triangle-exclamation me-2"></i>
+						<div>
+							Постбэки ещё не созданы
+						</div>
+					</div> <!-- /alert -->
+					{% endif %}
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!-- /row -->
+
+	<div class="row">
+		<div class="col-12 col-sm-12">
+			<div class="card mb-4">
+				<div class="card-header card-header-no-bg border-bottom-0">
+					<div class="card-title h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-0">
+						Транзакции
+					</div> <!-- /card-title -->
+				</div> <!-- /card-header -->
+
+
+				<div class="card-body">
+					{% if transactions %}
+					<div class="table-responsive">
+						<table class="table table-bordered text-nowrap mb-0">
+							<thead>
+								<tr class="text-center">
+									<th>Дата</th>
+									<th>Тип</th>
+									<th>Статус</th>
+									<th>Клиент</th>
+									<th>Банк</th>
+									<th>Карта</th>
+									<th>Сумма</th>
+									<th>Поток</th>
+									<th>Оффер</th>
+									<th>Ленд</th>
+								</tr>
+							</thead>
+							{% for transaction in transactions %}
+								<tbody>
+									<tr>
+										<td class="text-center">{{ transaction.create_date|date_change }}</td>
+										<td class="text-center">
+											{% if transaction.type == 'SUBSCRIPTION' %}
+												<span class="badge text-bg-outline-info d-flex align-items-center justify-content-center rounded-pill">
+												Подписка
+												</span>
+											{% elif transaction.type == 'REBILL' %}
+												<span class="badge text-bg-outline-secondary d-flex align-items-center justify-content-center rounded-pill">
+													Ребилл
+												</span>
+											{% endif %}
+										</td>
+										<td class="text-center">
+											{% if transaction.status == 'Completed' %}
+												<span class="badge text-bg-outline-success d-flex align-items-center justify-content-center rounded-pill">
+												Успешно
+												</span>
+											{% elif transaction.status == 'Declined' %}
+												<span data-bs-toggle="tooltip" data-bs-title="{{ transaction.error }}" class="badge text-bg-outline-danger d-flex align-items-center justify-content-center rounded-pill">
+												Ошибка
+												</span>
+											{% endif %}
+										</td>
+										<td>
+											<span data-bs-toggle="tooltip" data-bs-title="{{ transaction.client }}">{{ transaction.client|truncatechars:10 }}</span>
+											<span onclick="copyTextToClipboard( '{{ transaction.client }}' ); return false;" type="button" class="small ms-1" data-bs-toggle="tooltip" data-bs-title="Скопировать id клиента">
+												<i class="fa-regular fa-clipboard"></i>
+											</span>
+										</td>
+										<td>
+											{% if transaction.bank %}
+												{{ transaction.bank }}
+											{% else %}
+												&ndash;
+											{% endif %}
+										</td>
+										<td>{{ transaction.card }}</td>
+										<td>{{ transaction.sum|numb_format }}</td>
+										<td>{{ transaction.stream }}</td>
+										<td>{{ transaction.offer }}</td>
+										<td>{{ transaction.landing }}</td>
+									</tr>
+								</tbody>
+							{% endfor %}
+						</table>
+					</div> <!-- /table-responsive -->
+					{% else %}
+						<div class="alert alert-warning d-flex align-items-center mb-0" role="alert">
+							<i class="fa-regular fa-triangle-exclamation me-2"></i>
+							<div>
+								Транзакции не найдены
+							</div>
+						</div>
+					{% endif %}
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!-- /row -->
+
+	<script src="https://cdn-app.offering.pro/static/js/hours_stat.js"></script>
+
+{% endblock content %}

@@ -1,0 +1,432 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row mb-4">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-body">
+					<form action="#" method="POST">
+						{% csrf_token %}
+						<div class="row">
+
+							<div class="col-12 col-sm-6 mb-4">
+								<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4">
+									Название
+								</div> <!-- /subtitle -->
+
+								<input type="text" class="form-control" name="postbackName" id="postbackName" placeholder="postback_name">
+							</div> <!-- /col -->
+
+
+							<div class="col-12 col-sm-6 mb-4">
+								<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4">
+									Метод
+								</div> <!-- /subtitle -->
+
+								<select name="method_select" id="method" class="form-select">
+									<option value="none" selected disabled hidden>Выберите метод</option>
+									<option value="GET">GET</option>
+									<option value="POST">POST</option>
+								</select>
+							</div> <!-- /col -->
+						</div> <!-- /row -->
+
+
+						<div class="border-top mb-4"></div>
+
+
+						<div class="mb-4">
+							<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4">
+								URL
+							</div> <!-- /subtitle -->
+
+							<div class="mb-4">
+								{% if postback_get_data.link %}
+								<textarea id="link_posts_area" name="link" class="form-control" rows="5">{{ postback_get_data.link }}</textarea>
+								{% else %}
+								<textarea id="link_posts_area" name="link" class="form-control" rows="5"></textarea>
+								{% endif %}
+							</div>
+
+
+							<div class="border-top mt-4 mb-4"></div>
+
+							<div class="post_data_param h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4" {% if postback_get_data.method != 'POST' %}hidden{% else %}{% endif %}>
+								DATA
+							</div> <!-- /subtitle -->
+
+							<div class="post_data_param mb-4" {% if postback_get_data.method != 'POST' %}hidden{% else %}{% endif %}>
+								{% if postback_get_data.postdata %}
+								<textarea id="postdata_posts_area" name="postdata" class="form-control" rows="5">{{ postback_get_data.postdata }}</textarea>
+								{% else %}
+								<textarea id="postdata_posts_area" name="postdata" class="form-control" rows="5"></textarea>
+								{% endif %}
+							</div>
+
+							<div class="post_data_param border-top mt-4 mb-4" {% if postback_get_data.method != 'POST' %}hidden{% else %}{% endif %}></div>
+
+							<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-0">
+								Основные параметры
+							</div> <!-- /subtitle -->
+
+							<div class="row mb-4">
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="stream_posts_id" attr-data="stream={stream}" class="additional_params btn btn-light me-2" type="button">
+										{stream}
+									</button>
+
+									&ndash; название потока
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="payout_posts_id" attr-data="payout={payout}" class="additional_params btn btn-light me-2" type="button">
+										{payout}
+									</button>
+
+									&ndash; сумма отчислений (RUB)
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="tid_posts_id" attr-data="tid={tid}" class="additional_params btn btn-light me-2" type="button">
+										{tid}
+									</button>
+
+									&ndash; id транзакции
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="type_posts_id" attr-data="type={type}" class="additional_params btn btn-light me-2" type="button">
+										{type}
+									</button>
+
+									&ndash; тип события
+								</div> <!-- /col -->
+							</div> <!-- /row -->
+
+
+							<div class="border-top mt-4 mb-4"></div>
+
+
+							<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-0">
+								Дополнительные (передаваемые с трафиком)
+
+								<a class="ms-2" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-title="Эти параметры можно передавать, добавив к ссылке потока">
+									<i class="fa-regular fa-circle-question"></i>
+								</a>
+							</div> <!-- /subtitle -->
+
+							<div class="row mb-4">
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="cid_posts_id" attr-data="cid={cid}" class="additional_params btn btn-light me-2" type="button">
+										{cid}
+									</button>
+
+									&ndash; id клика
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="sub1_posts_id" attr-data="sub1={sub1}" class="additional_params btn btn-light me-2" type="button">
+										{sub1}
+									</button>
+
+									&ndash; субаккаунт 1
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="sub2_posts_id" attr-data="sub2={sub2}" class="additional_params btn btn-light me-2" type="button">
+										{sub2}
+									</button>
+
+									&ndash; субаккаунт 2
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="sub3_posts_id" attr-data="sub3={sub3}" class="additional_params btn btn-light me-2" type="button">
+										{sub3}
+									</button>
+
+									&ndash; субаккаунт 3
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="sub4_posts_id" attr-data="sub4={sub4}" class="additional_params btn btn-light me-2" type="button">
+										{sub4}
+									</button>
+
+									&ndash; субаккаунт 4
+								</div> <!-- /col -->
+								
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="sub5_posts_id" attr-data="sub5={sub5}" class="additional_params btn btn-light me-2" type="button">
+										{sub5}
+									</button>
+
+									&ndash; субаккаунт 5
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="cl_prof_posts_id" attr-data="cl_prof={cl_prof}" class="additional_params btn btn-light me-2" type="button">
+										{cl_prof}
+									</button>
+
+									&ndash; Доход от клиента
+								</div> <!-- /col -->
+
+							</div> <!-- /row -->
+
+
+							<div class="border-top mt-4 mb-4"></div>
+
+
+							<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-0">
+								UTM метки
+							</div> <!-- /subtitle -->
+
+							<div class="row mb-4">
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="utm_source_posts_id" attr-data="utm_source={utm_source}" class="additional_params btn btn-light me-2" type="button">
+										{utm_source}
+									</button>
+
+									&ndash; метка utm_source
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="utm_medium_posts_id" attr-data="utm_medium={utm_medium}" class="additional_params btn btn-light me-2" type="button">
+										{utm_medium}
+									</button>
+
+									&ndash; метка utm_medium
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="utm_campaign_posts_id" attr-data="utm_campaign={utm_campaign}" class="additional_params btn btn-light me-2" type="button">
+										{utm_campaign}
+									</button>
+
+									&ndash; метка utm_campaign
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="utm_content_posts_id" attr-data="utm_content={utm_content}" class="additional_params btn btn-light me-2" type="button">
+										{utm_content}
+									</button>
+
+									&ndash; метка utm_content
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-4">
+									<button id="utm_term_posts_id" attr-data="utm_term={utm_term}" class="additional_params btn btn-light me-2" type="button">
+										{utm_term}
+									</button>
+
+									&ndash; метка utm_term
+								</div> <!-- /col -->
+							</div> <!-- /row -->
+						</div>
+
+
+						<div class="border-top mt-4 mb-4"></div>
+
+
+						<div class="mb-4">
+							<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-0">
+								Тип события
+							</div> <!-- /subtitle -->
+
+							<div class="row">
+								<div class="col-auto mt-3 mt-sm-3">
+									<div class="form-check">
+										<input class="form-check-input" name="cbPostBacksReg" type="checkbox" value="1" id="cbPostBacksReg">
+
+										<label class="form-check-label" for="cbPostBacksReg">
+											Регистрация
+										</label>
+									</div> <!-- /form-check -->
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-3">
+									<div class="form-check">
+										<input class="form-check-input" name="cbPostBacksActiv" type="checkbox" value="2" id="cbPostBacksActiv">
+
+										<label class="form-check-label" for="cbPostBacksActiv">
+											Активация
+										</label>
+									</div> <!-- /form-check -->
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-3">
+									<div class="form-check">
+										<input class="form-check-input" name="cbPostBacksSubs" type="checkbox" value="3" id="cbPostBacksSubs">
+
+										<label class="form-check-label" for="cbPostBacksSubs">
+											Подписка
+										</label>
+									</div> <!-- /form-check -->
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-3">
+									<div class="form-check">
+										<input class="form-check-input" name="cbPostBacksRebill" type="checkbox" value="4" id="cbPostBacksRebill">
+
+										<label class="form-check-label" for="cbPostBacksRebill">
+											Ребилл
+										</label>
+									</div> <!-- /form-check -->
+								</div> <!-- /col -->
+
+								<div class="col-auto mt-3 mt-sm-3">
+									<div class="form-check">
+										<input class="form-check-input" name="cbPostBacksUnSubs" type="checkbox" value="5" id="cbPostBacksUnSubs">
+
+										<label class="form-check-label" for="cbPostBacksUnSubs">
+											Отписка
+										</label>
+									</div> <!-- /form-check -->
+								</div> <!-- /col -->
+							</div> <!-- /row -->
+						</div>
+
+
+						<div class="border-top mt-4 mb-4"></div>
+
+
+						<div class="d-grid">
+							<button class="btn btn-primary create_postback" type="submit">
+								Создать
+							</button>
+						</div>
+					</form>
+				</div> <!--/card-body-->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!--/row-->
+
+	<script>
+
+		var methodEl = document.querySelector('#method');
+		var paramsEl = document.querySelectorAll('.post_data_param');
+
+		methodEl.addEventListener('change', function(){
+			if (methodEl.value == 'POST'){
+				for (let i = 0; i < paramsEl.length; i++){
+					paramsEl[i].removeAttribute('hidden')
+				}
+			} else {
+			for (let i = 0; i < paramsEl.length; i++){
+				paramsEl[i].setAttribute('hidden', 'true')
+				}
+			}
+		})
+
+		var buttonEls = $('button[type="button"]');
+		var linkAreaEl = $('#link_posts_area');
+		var dataAreaEl = $('#postdata_posts_area');
+
+		for (let i = 0; i < buttonEls.length; i++){
+			buttonEls[i].addEventListener('click', function(){
+				var paramsGet = ''
+				var paramsPost = ''
+				var linkEl = linkAreaEl.val();
+				var dataEl = dataAreaEl.val();
+				if (methodEl.value == 'GET'){
+					if (!linkEl.includes(this.getAttribute("attr-data"))){
+						if (!linkAreaEl.val().includes('}')){
+							paramsGet+=('?'+this.getAttribute("attr-data"));
+							linkAreaEl.val(`${linkAreaEl.val()}${paramsGet}`);
+						}else{
+							if (!linkAreaEl.val().includes(this.getAttribute("attr-data"))){
+								linkAreaEl.val(`${linkAreaEl.val()}${'&'+this.getAttribute("attr-data")}`);
+							}
+						}
+					}
+				} else if (methodEl.value == 'POST') {
+					if (!dataEl.includes(this.getAttribute("attr-data"))){
+						if (!dataEl) {
+							paramsPost+=(this.getAttribute("attr-data"));
+							dataAreaEl.val(`${paramsPost}`);
+						} else {
+							paramsPost+=('&'+this.getAttribute("attr-data"));
+							dataAreaEl.val(`${dataEl}${paramsPost}`);
+					}
+					}
+				}
+			})
+		}
+
+	</script>
+
+	<script>
+
+		var name_message = 
+			`<div class="invalid-feedback postName">
+				Введите имя ПостБэка
+			</div>`;
+
+		var method_message = 
+			`<div class="invalid-feedback postMethod">
+				Выберите метод
+			</div>`;
+
+		var link_message = 
+			`<div class="invalid-feedback postLink">
+				Введите адрес (ссылку)
+			</div>`;	
+
+		$('.create_postback').on('click', function(event){
+			$('.postName').remove();
+			$('.postMethod').remove();
+			$('.postLink').remove();
+			if(!$('#postbackName').val() || !$('#method').val() || !$('#link_posts_area').val()){
+				if(!$('#postbackName').val()){
+					$('#postbackName').addClass('is-invalid');
+					$('#postbackName').after(name_message)
+				}if(!$('#method').val()){
+					$('#method').addClass('is-invalid');
+					$('#method').after(method_message)
+				}if(!$('#link_posts_area').val()){
+					$('#link_posts_area').addClass('is-invalid');
+					$('#link_posts_area').after(link_message)
+				}
+				window.scrollTo(0, 0);
+				event.preventDefault();
+			}
+		})
+
+		$('#postbackName').on('input', function(){
+			if($('#postbackName').val()){
+				$('.postName').remove();
+				$('#postbackName').removeClass('is-invalid');
+				$('#postbackName').addClass('is-valid');
+			}else{
+				$('#postbackName').addClass('is-invalid');
+				$('#postbackName').after(name_message);
+			}
+		})
+		
+		$('#method').on('change', function(){
+			if($('#method').val()){
+				$('.postMethod').remove();
+				$('#method').removeClass('is-invalid');
+				$('#method').addClass('is-valid');
+			}else{
+				$('#method').addClass('is-invalid');
+				$('#method').after(method_message);
+			}
+		})
+
+		$('#link_posts_area').on('input', function(){
+			if($('#link_posts_area').val()){
+				$('.postLink').remove();
+				$('#link_posts_area').removeClass('is-invalid');
+				$('#link_posts_area').addClass('is-valid');
+			}else{
+				$('#link_posts_area').addClass('is-invalid');
+				$('#link_posts_area').after(link_message);
+			}
+		})
+
+	</script>
+
+{% endblock content %}

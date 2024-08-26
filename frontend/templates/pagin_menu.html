@@ -1,0 +1,107 @@
+<div class="card-body">
+    <div class="pagin_list">
+        {% if count > 1 %}
+            <nav id="pagination" class="col align-self-center mt-4" aria-label="Page navigation example">
+                <ul class="pagination mb-0">
+                {% if page > 1 %}
+                    {% if url_params %}
+                        <li class="page-item"><a class="page-link" href="{{url_params}}&page={{ 1 }}">&laquo;</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="{{url_params}}?page={{ 1 }}">&laquo;</a></li>
+                    {% endif %}
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link" href="" tabindex="-1" aria-disabled="true">&laquo;</span></li>
+                {% endif %}
+                {% for p in count|create_range %}
+                    {% if p > page|add:-4 and p < page|add:4 %}
+                        {% if p|increment_page == count %}
+                            {% if page == p|increment_page %}
+                                {% if url_params %}
+                                    <li class="page-item active" aria-current="page"><a class="page-link" href="{{url_params}}&page={{ p|increment_page }}">{{ limit|multiply:p|add:1 }}-{{ original_count }}<span class="sr-only">{{ page }}</span></a></li>
+                                {% else %}
+                                    <li class="page-item active" aria-current="page"><a class="page-link" href="{{url_params}}?page={{ p|increment_page }}">{{ limit|multiply:p|add:1 }}-{{ original_count }}<span class="sr-only">{{ page }}</span></a></li>
+                                {% endif %}
+                            {% else %}
+                                {% if url_params %}
+                                    <li class="page-item"><a class="page-link" href="{{url_params}}&page={{ p|increment_page }}">{{ limit|multiply:p|add:1 }}-{{ original_count}}</a></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="{{url_params}}?page={{ p|increment_page }}">{{ limit|multiply:p|add:1 }}-{{ original_count }}</a></li>
+                                {% endif %}
+                            {% endif %}
+                        {% elif page == p|increment_page %}
+                            {% if url_params %}
+                                <li class="page-item active" aria-current="page"><a class="page-link" href="{{url_params}}&page={{ p|increment_page }}">{{ limit|multiply:p|add:1 }}-{{ limit|multiply:p|add:limit }}<span class="sr-only">{{ page }}</span></a></li>
+                            {% else %}
+                                <li class="page-item active" aria-current="page"><a class="page-link" href="{{url_params}}?page={{ p|increment_page }}">{{ limit|multiply:p|add:1 }}-{{ limit|multiply:p|add:limit }}<span class="sr-only">{{ page }}</span></a></li>
+                            {% endif %}
+                        {% else %}
+                            {% if url_params %}
+                                <li class="page-item"><a class="page-link" href="{{url_params}}&page={{ p|increment_page }}">{{ limit|multiply:p|add:1 }}-{{ limit|multiply:p|add:limit }}</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="{{url_params}}?page={{ p|increment_page }}">{{ limit|multiply:p|add:1 }}-{{ limit|multiply:p|add:limit }}</a></li>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                {% if page < count %}
+                    {% if url_params %}
+                        <li class="page-item"><a class="page-link" href="{{url_params}}&page={{ count }}">&raquo;</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="{{url_params}}?page={{ count }}">&raquo;</a></li>
+                    {% endif %}
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link" href="" tabindex="-1" aria-disabled="true">&raquo;</span></li>
+                {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+
+    <div class="mt-4">
+
+    {% if limit == 25 %}
+
+        <button type="button" id="limit25" name="25" class="checkLimitButton btn btn-secondary btn-sm me-2" disabled>
+            По 25
+        </button>
+
+        <button type="button" id="limit50" name="50" class="checkLimitButton btn btn-secondary btn-sm me-2">
+            По 50
+        </button>
+
+        <button type="button" id="limit100" name="100" class="checkLimitButton btn btn-secondary btn-sm me-2">
+            По 100
+        </button>
+
+    {% elif limit == 50 %}
+
+        <button type="button" id="limit25" name="25" class="checkLimitButton btn btn-secondary btn-sm me-2">
+            По 25
+        </button>
+
+        <button type="button" id="limit50" name="50" class="checkLimitButton btn btn-secondary btn-sm me-2" disabled>
+            По 50
+        </button>
+
+        <button type="button" id="limit100" name="100" class="checkLimitButton btn btn-secondary btn-sm me-2">
+            По 100
+        </button>
+
+    {% else %}
+
+        <button type="button" id="limit25" name="25" class="checkLimitButton btn btn-secondary btn-sm me-2">
+            По 25
+        </button>
+
+        <button type="button" id="limit50" name="50" class="checkLimitButton btn btn-secondary btn-sm me-2">
+            По 50
+        </button>
+
+        <button type="button" id="limit100" name="100" class="checkLimitButton btn btn-secondary btn-sm me-2" disabled>
+            По 100
+        </button>
+
+    {% endif %}
+
+</div> <!-- /btn-select-rows -->
+</div>

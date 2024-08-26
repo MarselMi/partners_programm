@@ -1,0 +1,239 @@
+{% load static %}
+<!doctype html>
+<html lang="ru" class="h-100">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Восстановление пароля</title>
+
+	<link rel="icon" href="https://cdn-app.offering.pro/static/img/brand/favicon.png" type="image/x-icon"/>
+
+	<!-- css -->
+	<link rel="stylesheet" href="https://cdn-app.offering.pro/static/css/bootstrap-2.css?v=3">
+	<link rel="stylesheet" href="https://cdn-app.offering.pro/static/css/all.min.css">
+	<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+</head>
+<body class="auth-page d-flex h-100">
+
+
+<div class="container-fluid m-auto">
+	<div class="row">
+		<main class="col-md-6 mx-auto col-lg-4 px-md-4 pt-3 pb-3">
+			<div class="card rounded-5 shadow-lg">
+				<div class="navbar-brand anim-up-dn pt-5 pb-0 ps-5 pe-5">
+					<img src="https://cdn-app.offering.pro/static/img/brand/logo-1.svg" alt="">
+				</div> <!--/navbar-brand-->
+
+
+				<div class="card-body pt-5 pb-5 ps-5 pe-5">
+					<h1 class="h3 pb-3 mb-4 border-bottom text-center">
+						Восстановление пароля
+					</h1> <!-- /title -->
+
+					<div id="form_change">
+						
+						<div id="new_pwd1_div" hidden>
+							<span>Новый пароль (Не менее 6 символов)</span>
+							<div class="form-floating">
+								<input type="password" name="newpassword1" class="form-control mb-1" id="newpassword1" placeholder="******">
+								<label for="newpassword1">
+									Введите новый пароль
+								</label>
+							</div>
+						</div>
+
+						<div id="new_pwd2_div" hidden>
+							<div class="form-floating">
+								<input type="password" name="newpassword2" class="form-control" id="newpassword2" placeholder="******">
+								<label for="newpassword2">
+									Повторите новый пароль
+								</label>
+							</div>
+						</div>
+
+						<div class="form-floating mb-3" id="div_mail">
+							<input type="email" class="form-control" id="email" placeholder="name@example.ru">
+							<label for="email">
+								Email
+							</label>
+						</div> <!-- /form-floating -->
+
+						<div class="form-floating telegram_pwd mt-3 mb-3" hidden>
+							<input name="telegram_mess_for_pwd" class="form-control" id="telegram_mess_for_pwd" placeholder="******">
+							<label for="telegram_mess_for_pwd">
+								Введите код полученный из Telegram
+							</label>
+						</div> <!-- /form-floating -->
+
+						<button id="save_pwd" hidden class="w-100 btn btn-lg btn-primary mt-2" type="button" disabled>
+								Сохранить пароль
+						</button> <!-- /btn -->
+
+						<button id="forgot_pwd" class="w-100 btn btn-lg btn-primary" type="button">
+							Восстановить
+						</button> <!-- /btn -->
+
+					</div> <!-- /form -->
+				</div> <!-- /card-body -->
+
+				<div class="card-footer text-center">
+					<a href="{% url 'login' %}">
+						Авторизоваться
+					</a>
+					<br>
+
+					<a href="{% url 'register' %}">
+						Зарегистрироваться
+					</a>
+				</div> <!-- /card-footer -->
+			</div> <!-- /card -->
+		</main> <!-- /content -->
+	</div> <!-- /row -->
+</div> <!-- /container-fluid -->
+
+
+
+<!-- scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+<script>
+	var url = document.location.href;
+	var a = document.cookie.split(';');
+	var token = ''
+
+	for (i = 0; i < a.length; i++) {
+		var b = a[i].split('=')
+		b[0] = b[0].replace(/\s+/g, '')
+		if (b[0] == 'csrftoken') {
+			token = b[1]
+		}
+	}
+
+	var new_password = ``
+
+	var new_password1 = ``
+	var save_btn = ``
+
+	var input_el_telegr_mess = `
+						`				
+	// отправка email для проверки партнера
+	$('#forgot_pwd').on('click', function(){
+		if($('#email').val()){
+			var mail = $('#email').val();
+			$.ajax({
+				url: url,
+				method: 'POST',
+				data: {
+					csrfmiddlewaretoken: token,
+					type: 'forgot_pwd',
+					email: mail
+				}
+			}).then(function(result){
+				var res = JSON.parse(result)
+				if (res.id){
+					$('#div_mail').attr('hidden', 'true');
+					$('#forgot_pwd').attr('hidden', 'true');
+					$('.telegram_pwd').removeAttr('hidden');
+					$('.alert-danger').remove();
+				}else if(res.detail){
+					$('.alert-danger').remove();
+					$('#form_change').prepend(`<div class="alert alert-danger" role="alert">
+											<div class="d-block">
+												${res.detail}
+											</div>
+										</div>`);
+				};
+			}).catch(function(err){
+				var x = 0
+			});
+		}
+	})
+	$('#telegram_mess_for_pwd').on('input', function(){
+		var tel_val_pwd = $('#telegram_mess_for_pwd').val();
+		if (tel_val_pwd.length == 6){
+			$.ajax({
+				url: url,
+				method: 'POST',
+				data: {
+					csrfmiddlewaretoken: token,
+					type: 'totfa_password_check_code',
+					message_code: tel_val_pwd
+				}
+			}).then(function(result){
+				var response = JSON.parse(result)
+				if(response.detail == 'OK' || response.detail == 'ok'){
+					$('.telegram_pwd').remove();
+					$('#new_pwd1_div').removeAttr('hidden')
+					$('#new_pwd2_div').removeAttr('hidden')
+					$('#save_pwd').removeAttr('hidden')
+				}else{
+					$('#telegram_mess_for_pwd').addClass('is-invalid');
+				}
+			}).catch(function(err){
+				x = 0;
+			})
+		}
+	})
+	
+
+	$('#newpassword1').on('input change', function(){
+		if ($('#newpassword1').val() != $('#newpassword2').val()){
+			$('#newpassword2').removeClass('is-valid');
+			$('#newpassword2').addClass('is-invalid');
+		}else{
+			$('#newpassword2').addClass('is-valid');
+			$('#newpassword2').removeClass('is-invalid');
+		}
+		if($('#newpassword1').val().length >= 6){
+			$('#newpassword1').removeClass('is-invalid');
+			$('#newpassword1').addClass('is-valid');
+		}else{
+			$('#newpassword1').addClass('is-invalid');
+			$('#newpassword1').removeClass('is-valid');
+		}
+	})
+
+
+
+	$('#newpassword2').on('input change', function(){
+		if($('#newpassword2').val() == $('#newpassword1').val()){
+			$('#newpassword2').removeClass('is-invalid');
+			$('#newpassword2').addClass('is-valid');
+		}else{
+			$('#newpassword2').addClass('is-invalid');
+			$('#newpassword2').removeClass('is-valid');
+		}
+	})
+
+	$('#form_change').on('input', function(){
+		if($('#newpassword2').hasClass('is-invalid') || $('#newpassword2').val() == ''){
+			$('#save_pwd').attr('disabled', 'true')
+		}else{
+			$('#save_pwd').removeAttr('disabled')
+		}
+	});
+
+	$('#save_pwd').on('click', function(){
+		var new_pwd = $('#newpassword2').val()
+
+		$.ajax({
+			url: url,
+			method: 'POST',
+			data: {
+				csrfmiddlewaretoken: token,
+				type: 'change_pwd',
+				new_pwd_post: new_pwd
+			}
+		}).then(function(result){
+			window.location.replace('/auth/')
+		}).catch(function(err){
+			var x = 0
+		});
+	})
+
+</script>
+
+
+</body>
+</html>

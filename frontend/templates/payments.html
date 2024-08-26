@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row mb-4">
+				<div class="col-12">
+					<div class="card">
+						<div class="card-header d-flex align-items-center card-header-no-bg border-bottom-0">
+							<div class="card-title h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-0">
+								Список выплат
+							</div> <!-- /card-title -->
+
+							<div class="card-options ms-auto">
+								<a href="{% url 'add_payment' %}" class="btn btn-primary btn-sm">Заказать выплату</a>
+							</div> <!-- /card-options -->
+						</div> <!-- /card-header -->
+
+
+						<div class="card-body">
+							<div class="table-responsive">
+								{% if payouts_partner %}
+
+								<table class="table table-bordered text-nowrap mb-0">
+									<thead>
+										<tr>
+											<th class="text-center">ID</th>
+											<th>Дата заказа</th>
+											<th>Тип</th>
+											<th>Реквизиты</th>
+											<th>Сумма</th>
+											<th>Комиссия</th>
+											<th>Фикс. комиссия</th>
+											<th>Сумма выплаты</th>
+											<th class="text-center">Статус</th>
+										</tr>
+									</thead>
+
+								{% for pay in payouts_partner %}
+								<tbody>
+									<tr>
+										<td class="text-center">{{ pay.id }}</td>
+										<td>{{ pay.request_date|date_change }}</td>
+										<td>{{ pay.requisites }}</td>
+										<td>
+											{% if pay.requisites|card_check %}
+												{{ pay.selected_requisites|card_numb }}
+											{% else %} 
+												{{ pay.selected_requisites }}
+											{% endif %} 
+										</td>
+										<td>
+											{% if pay.chargeback_id_id %}
+												&ndash;
+											{% else %}
+												{{ pay.sum|numb_format }}
+											{% endif %}
+										</td>
+										<td>
+											{% if pay.comission %}
+												{{ pay.comission|numb_format }}%
+											{% else %}
+												&ndash;
+											{% endif %}
+										</td>
+										<td>{{ pay.fix|numb_format }}</td>
+										<td>
+											{% if pay.chargeback_id_id %}
+												{{ pay.sum|numb_format }}
+											{% else %}
+												{{ pay.sum_realise|numb_format }}
+											{% endif %}
+										</td>
+										<td class="text-center">
+											{% if pay.status == 'IN_PROCESS' %}
+												<span class="badge bg-warning">
+													На модерации
+												</span>
+											{% elif pay.status == 'CANCELLED' %}
+												<span class="badge bg-danger">
+													Отказано
+												</span>
+											{% else %}
+												{% if pay.processed == 1 %}
+													<span class="badge bg-warning">
+														В обработке
+													</span>
+												{% elif pay.processed == 2 %}
+													<span class="badge bg-danger">
+														Отказано
+													</span>
+												{% else %}
+													<span class="badge bg-success">
+														Выплачено
+													</span>
+												{% endif %}
+											{% endif %}
+										</td>
+									</tr>
+								</tbody>
+								{% endfor %}
+								</table>
+								{% else %}
+								<div class="alert alert-warning d-flex align-items-center mb-0" role="alert">
+									<i class="fas fa-exclamation-triangle me-2"></i>
+									<div>
+										Выплат не найдено, Вы сможете создать выплату,
+										когда на балансе будет минимальная сумма 1 000 рублей
+									</div>
+								</div>
+								{% endif %}
+							</div> <!-- /table-responsive -->
+
+							{% include 'pagin_menu.html' %}
+
+						</div> <!-- /card-body -->
+					</div> <!-- /card -->
+				</div> <!-- /col -->
+			</div> <!--/row-->
+
+	<script>
+
+		var url = document.location.href;
+		var a = document.cookie.split(';');
+		var token = ''
+		for (let i = 0; i < a.length; i++) {
+			var b = a[i].split('=');
+			b[0] = b[0].replace(/\s+/g, '');
+			if (b[0] == 'csrftoken') {
+				token = b[1];
+			}
+		};
+
+		var btnLimEl = document.querySelectorAll('.checkLimitButton');
+
+		for (let i = 0; i < btnLimEl.length; i++){
+			btnLimEl[i].addEventListener('click', function(event) {
+				if (event.target == btnLimEl[i]){
+					$.ajax(
+						{
+							url: url,
+							method: 'POST',
+							data: {
+								csrfmiddlewaretoken: token,
+								type: 'page_limit',
+								limit: btnLimEl[i].getAttribute("name")
+							}
+						}).then(function(result) {
+							var x = document.location.search.split('&page')[0];
+							x = x.split('?page')[0];
+							document.location.href = document.location.origin + document.location.pathname + x;
+						}).catch(function(err) {
+							var x = 1;
+					})
+				}
+			})
+		};
+
+	</script>
+{% endblock content %}

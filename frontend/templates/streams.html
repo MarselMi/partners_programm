@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row mb-4">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header d-flex align-items-center card-header-no-bg border-bottom-0">
+					<div class="card-title h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-0">
+						Список потоков
+					</div> <!-- /card-title -->
+
+					<div class="card-options ms-auto">
+						<a href="{% url 'add_stream' %}" class="btn btn-primary btn-sm">Создать поток</a>
+					</div> <!-- /card-options -->
+				</div> <!-- /card-header -->
+
+
+				<div class="card-body">
+					{% if streams %}
+					<div class="table-responsive">
+						<table class="table table-bordered text-nowrap mb-0">
+							<thead>
+							<tr>
+								<th>ID</th>
+								<th>Название</th>
+								<th>Создан</th>
+								<th>Изменён</th>
+								<th>Оффер</th>
+								<th>Лендинг</th>
+								<th class="text-center">Ссылка</th>
+								<th class="text-center">Действия</th>
+							</tr>
+							</thead>
+							<tbody class="align-middle">
+							{% for stream in streams %}
+								<tr>
+									<td>{{ stream.uid }}</td>
+										<td>
+											<div class="d-flex">
+												{{ stream.name }}
+												{% if stream.landingelement_data %}
+													<span class="ms-auto ps-2" data-bs-toggle="tooltip" data-bs-title="{{ stream.landingelement_data }}">
+													<i class="fa-sharp fa-solid fa-info ms-auto"></i>
+													</span>
+												{% endif %}
+												<a href="{% url 'days' %}?stream_id={{ stream.name }}" class="btn btn-light btn-sm ms-auto" data-bs-toggle="tooltip" data-bs-title="Статистика">
+												  <i class="fa-regular fa-chart-mixed"></i>
+												</a>
+											</div>
+										</td>
+									<td>{{ stream.created|date_change }}</td>
+
+									{% if stream.change_date %}
+									<td>{{ stream.change_date|date_change }}</td>
+									{% else %}
+									<td>&ndash;</td>
+									{% endif %}
+
+									<td>{{ stream.offer_name }}</td>
+
+
+									<td>{{ stream.land_name }}</td>
+
+									<input name="link" id="{{ stream.count }}" value="{{ stream.link }}" hidden/>
+									<td class="text-center">
+										<button onclick="copyTextToClipboard( '{{ stream.link }}' ); return false;" type="button" class="btn btn-light btn-sm" data-bs-toggle="tooltip" data-bs-title="Скопировать">
+											<i class="fa-regular fa-clipboard"></i>
+										</button>
+									</td>
+									<td class="text-center">
+										<a href="{% url 'stream_edit' stream_uid=stream.uid %}" class="btn btn-light btn-sm" data-bs-toggle="tooltip" data-bs-title="Редактировать">
+											<i class="fa-regular fa-pen-to-square"></i>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+						</table> <!-- /table -->
+					</div> <!-- /table-responsive -->
+					{% else %}
+					<div class="alert alert-warning" role="alert">
+						<h4 class="alert-heading">
+							<i class="fa-regular fa-octagon-exclamation me-2"></i>
+							Внимание!
+						</h4>
+
+						<p>
+							Нет созданных потоков.
+						</p>
+
+						<hr>
+
+						<p class="mb-0">
+							Создайте поток, чтобы получить ссылку для слива трафика.
+						</p>
+					</div> <!-- /alert -->
+					{% endif %}
+				</div> <!-- /card-body -->
+
+				{% include 'pagin_menu.html' %}
+
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!--/row-->
+
+	<script>
+		'use strict'
+
+		var url = document.location.href;
+		var a = document.cookie.split(';');
+		var token = '';
+		for (let i = 0; i < a.length; i++) {
+			var b = a[i].split('=');
+			b[0] = b[0].replace(/\s+/g, '');
+			if (b[0] == 'csrftoken') {
+				token = b[1];
+			}
+		};
+
+		var btnLimEl = document.querySelectorAll('.checkLimitButton');
+
+		for (let i = 0; i < btnLimEl.length; i++){
+			btnLimEl[i].addEventListener('click', function(event) {
+				if (event.target == btnLimEl[i]){
+					$.ajax(
+						{
+							url: url,
+							method: 'POST',
+							data: {
+								csrfmiddlewaretoken: token,
+								type: 'page_limit',
+								limit: btnLimEl[i].getAttribute("name")
+							}
+						}).then(function(result) {
+							var x = document.location.search.split('&page')[0];
+							x = x.split('?page')[0];
+							document.location.href = document.location.origin + document.location.pathname + x;
+						}).catch(function(err) {
+							var x = 1;
+					})
+				}
+			})
+		};
+
+	</script>
+
+{% endblock content %}

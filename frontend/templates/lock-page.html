@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row">
+				<div class="col-12">
+					<div class="card mb-4">
+						<div class="card-body">
+							{% if profile_info.telegram %}
+							<div class="alert mb-3 alert-success" role="alert">
+								Аккаунт Telegram привязан, теперь можете продолжить работу.
+							</div> <!-- /alert -->
+							{% endif %}
+							<div class="row">
+								<div class="col-12 col-lg-6">
+									<div class="input-group">
+										<span class="input-group-text">
+											{% if profile_info.telegram %}
+											<i class="fa-regular fa-circle-check text-success"></i>
+										</span>
+										<input type="text" class="form-control" id="floatingInput" value="{{ profile_info.telegram }}" readonly>
+											{% else %}
+											<i class="fa-regular fa-circle-info text-danger" data-bs-toggle="tooltip" data-bs-title="Привяжите Telegram"></i>
+										</span>
+										<input type="text" class="form-control" id="floatingInput" placeholder="Нажмите 'Привязать' для подтверждения Telegram" readonly>
+											{% endif %}
+									</div>
+								</div> <!-- /col -->
+
+								<div class="col-12 col-lg-6">
+									<div class="mt-3 mt-lg-0 d-grid">
+										{% if profile_info.telegram %}
+										<a class="btn btn-primary" href="{% url 'general' %}">
+											Продолжить
+										</a>
+										{% else %}
+										<a class="btn btn-primary" href="tg://resolve?domain=offeringpartnersbot&start=st-{{ md5_hash }}-{{ profile_info.id }}">
+											Привязать
+										</a>
+										{% endif %}
+									</div>
+								</div> <!-- /col -->
+							</div> <!-- /row -->
+						</div> <!-- /card-body -->
+					</div> <!-- /card -->
+				</div> <!-- /col -->
+			</div> <!-- /row -->
+
+<script>
+	var telegram_id = $('#floatingInput')
+	if (!telegram_id.val()) {
+		setTimeout(function(){
+			location.reload();
+		}, 12000);
+	};
+</script>
+
+{% endblock content %}

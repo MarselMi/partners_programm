@@ -1,0 +1,799 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card mb-4">
+				<div class="card-body">
+					{% if stream_get.partner_id_id == user_id %}
+
+					<form action="#" method="POST">
+						{% csrf_token %}
+						<div class="mb-4">
+							<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4">
+								Название
+							</div> <!-- /subtitle -->
+							
+							<input type="text" class="form-control" name="streamName" id="streamName" value="{{ stream_get.name }}">
+						</div> <!-- /item -->
+
+						<input type="hidden" id="offerval" name="offer" value="{{ stream_get.offer_id_id }}" /> <input type="hidden" id="landval" name="land" value="{{ stream_get.landing_id_id }}" />
+
+						<div class="border-top mt-4 mb-4"></div>
+
+						<div class="mb-4">
+							<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4">
+								Оффер
+							</div> <!-- /subtitle -->
+
+							<div class="row">
+								{% for offer in request.session.offers_list %}
+									{% if offer.id == stream_get.offer_id_id %}
+										<div class="col-12 col-md-3 col-sm-4 mt-3">
+											<div class="offerselected offer-select" id="offerselect{{ offer.id }}">
+												<a onclick="change_offer({{ offer.id }}); show_hidden(event);" name="offer{{ offer.id }}">
+													<img class="img-fluid" src="https://cdn-offers.offering.pro/media/{{ offer.screenshot }}" style="height: 100%; width: 100%" alt="">
+												</a>
+											</div>
+										</div> <!-- /offers-logo -->
+									{% else %}
+										<div class="col-12 col-md-3 col-sm-4 mt-3">
+											<div class="offerselected opacity-50" id="offerselect{{ offer.id }}">
+												<a onclick="change_offer({{ offer.id }}); show_hidden(event);" name="offer{{ offer.id }}">
+													<img class="img-fluid" src="https://cdn-offers.offering.pro/media/{{ offer.screenshot }}" style="height: 100%; width: 100%" alt="">
+												</a>
+											</div>
+										</div> <!-- /offers-logo -->
+									{% endif %}
+								{% endfor %}
+							</div>
+						</div> <!-- /item -->
+<!--							<div class="border-top mt-4 mb-4"></div>-->
+<!--							<div class="mb-4">-->
+<!--								<div class="h6 fw-bold text-uppercase mb-4">-->
+<!--									Преленд-->
+<!--								</div> &lt;!&ndash; /subtitle &ndash;&gt;-->
+<!--								Не выбран-->
+<!--								<a class="btn btn-primary btn-sm ms-3" href="javascript:void(0);">Выбрать</a>-->
+<!--							</div> &lt;!&ndash; /item &ndash;&gt;-->
+
+						<div class="border-top mt-4 mb-4"></div>
+
+						<div class="mb-4" id="landingsInformation">
+							<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4">
+								Лендинг
+							</div> <!-- /subtitle -->
+
+							<div class="row">
+								{% for land in landings %}
+									{% if land.id == stream_get.landing_id_id %}
+										<div class="landcheck col-12 col-md-3 col-sm-4 text-center lands lands_{{ land.offer_id_id }}" data-add="{{ land.landing_elements }}" data-land="{{ land.id }}" value="{{ land.offer_id_id }}" id="{{ land.offer_id_id }}">
+											<figure class="figure">
+												<a id="lpselect{{ land.id }}" data-land-id="{{ land.id }}" data-off-id="{{ land.offer_id_id }}" class="landing_by_offer lpselected offer-lp-select" onclick="chland({{ land.id }}); return false;"  name="lpselect_{{ land.id }}" >
+													<img class="figure-img img-fluid" src="https://cdn-offers.offering.pro/media/{{ land.screenshot }}" alt="">
+												</a>
+												<figcaption class="figure-caption text-center">{{ land.name }}</figcaption>
+											</figure>
+										</div> <!-- /offers-land -->
+									{% elif land.offer_id_id == stream_get.offer_id_id %}
+										<div class="landcheck col-12 col-md-3 col-sm-4 text-center lands lands_{{ land.offer_id_id }}" data-add="{{ land.landing_elements }}" data-land="{{ land.id }}" value="{{ land.offer_id_id }}" id="{{ land.offer_id_id }}">
+											<figure class="figure">
+												<a id="lpselect{{ land.id }}" data-land-id="{{ land.id }}" data-off-id="{{ land.offer_id_id }}" class="landing_by_offer lpselected opacity-50" onclick="chland({{ land.id }}); return false;"  name="lpselect_{{ land.id }}">
+													<img class="figure-img img-fluid" src="https://cdn-offers.offering.pro/media/{{ land.screenshot }}" alt="">
+												</a>
+												<figcaption class="figure-caption text-center">{{ land.name }}</figcaption>
+											</figure>
+										</div> <!-- /offers-land -->
+									{% else %}
+										<div class="landcheck col-12 col-md-3 col-sm-4 text-center lands lands_{{ land.offer_id_id }}" data-add="{{ land.landing_elements }}" data-land="{{ land.id }}" style="display: none;" value="{{ land.offer_id_id }}" id="{{ land.offer_id_id }}">
+											<figure class="figure">
+												<a id="lpselect{{ land.id }}" data-land-id="{{ land.id }}" data-off-id="{{ land.offer_id_id }}" class="landing_by_offer lpselected opacity-50" onclick="chland({{ land.id }}); return false;"  name="lpselect_{{ land.id }}">
+													<img class="figure-img img-fluid" src="https://cdn-offers.offering.pro/media/{{ land.screenshot }}"alt="">
+												</a>
+												<figcaption class="figure-caption text-center">{{ land.name }}</figcaption>
+											</figure>
+										</div> <!-- /offers-land -->
+									{% endif %}
+								{% endfor %}
+							</div> <!--/row-->
+						</div> <!-- /item -->
+
+						<div class="border-top mt-4 mb-4"></div>
+
+						<div class="mb-4">
+							<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-2">
+								Трекеры и пиксели
+							</div> <!-- /subtitle -->
+
+							<div class="row">
+								<div class="col-12 col-md-4 col-lg-3 col-xl-2 mt-3">
+									<label for="streamTrackerYaMetrika" class="form-label">
+										Яндекс.Метрика
+									</label>
+									{% if stream_get.yandex_metric == None or stream_get.yandex_metric == 'None' %}
+									<input type="text" name="streamTrackerYaMetrika" class="form-control" id="streamTrackerYaMetrika" value="">
+									{% else %}
+									<input type="text" name="streamTrackerYaMetrika" class="form-control" id="streamTrackerYaMetrika" value="{{ stream_get.yandex_metric }}">
+									{% endif %}
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-4 col-lg-3 col-xl-2 mt-3">
+									<label for="streamTrackerGoogleAn" class="form-label">
+										Google Analytics
+									</label>
+									{% if stream_get.google_analytics == None or stream_get.google_analytics == 'None' %}
+									<input type="text" name="streamTrackerGoogleAn" class="form-control" id="streamTrackerGoogleAn" value="">
+									{% else %}
+									<input type="text" name="streamTrackerGoogleAn" class="form-control" id="streamTrackerGoogleAn" value="{{ stream_get.google_analytics }}">
+									{% endif %}
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-4 col-lg-3 col-xl-2 mt-3">
+									<label for="streamTrackerTopMailRu" class="form-label">
+										ТОП Mail.ru
+									</label>
+									{% if stream_get.top_mail_ru == None or stream_get.top_mail_ru == 'None' %}
+									<input type="text" name="streamTrackerTopMailRu" class="form-control" id="streamTrackerTopMailRu" value="">
+									{% else %}
+									<input type="text" name="streamTrackerTopMailRu" class="form-control" id="streamTrackerTopMailRu" value="{{ stream_get.top_mail_ru }}">
+									{% endif %}
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-4 col-lg-3 col-xl-2 mt-3">
+									<label for="streamTrackerFBpixel" class="form-label">
+										Facebook pixel
+									</label>
+									{% if  stream_get.facebook_pixel == None or stream_get.facebook_pixel == 'None' %}
+									<input type="text" name="streamTrackerFBpixel" class="form-control" id="streamTrackerFBpixel" value="">
+									{% else %}
+									<input type="text" name="streamTrackerFBpixel" class="form-control" id="streamTrackerFBpixel" value="{{ stream_get.facebook_pixel }}">
+									{% endif %}
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-4 col-lg-3 col-xl-2 mt-3">
+									<label for="streamTrackerVKcounter" class="form-label">
+										ВКонтакте счётчик
+									</label>
+									{% if stream_get.vk_counter == None or stream_get.vk_counter == 'None' %}
+									<input type="text" name="streamTrackerVKcounter" class="form-control" id="streamTrackerVKcounter" value="">
+									{% else %}
+									<input type="text" name="streamTrackerVKcounter" class="form-control" id="streamTrackerVKcounter" value="{{ stream_get.vk_counter }}">
+									{% endif %}
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-4 col-lg-3 col-xl-2 mt-3">
+									<label for="streamTrackerTTpixel" class="form-label">
+										TikTok pixel
+									</label>
+									{% if stream_get.tiktok_pixel == None or stream_get.tiktok_pixel == 'None' %}
+									<input type="text" name="streamTrackerTTpixel" class="form-control" id="streamTrackerTTpixel" value="">
+									{% else %}
+									<input type="text" name="streamTrackerTTpixel" class="form-control" id="streamTrackerTTpixel" value="{{ stream_get.tiktok_pixel }}">
+									{% endif %}
+								</div> <!-- /col -->
+							</div> <!-- /row -->
+						</div> <!-- /item -->
+
+						<div class="border-top mt-4 mb-4"></div>
+
+						<div class="mb-4">
+							<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-2">
+								PostBacks
+							</div> <!-- /subtitle -->
+
+							<div class="row">
+								{% if postbacks_partner %}
+									{% for postback in postbacks_partner %}
+										<div class="col-12 col-md-4 col-lg-3 mt-3">
+											<div class="form-check">
+												{% if postback.id in stream_get.postback_id %}
+													<input class="form-check-input" name="postbacks" type="checkbox" value="{{ postback.id }}" id="postback_{{ postback.id }}" checked>
+												{% else %}
+													<input class="form-check-input" name="postbacks" type="checkbox" value="{{ postback.id }}" id="postback_{{ postback.id }}">
+												{% endif %}
+												<label class="form-check-label" for="postback_{{ postback.id }}">
+													Имя: {{ postback.name }}
+													<br>
+													<span class="small">
+														События: {% for event in postback.event_id %}
+														{{ event|postback_event }}
+														{% endfor %}
+														<br>
+														status: {{ postback.status }}
+													</span>
+												</label>
+											</div> <!-- /form-check -->
+										</div> <!-- /col -->
+									{% endfor %}
+								{% else %}
+								<div class="alert alert-warning d-flex align-items-center mb-0" role="alert">
+									<i class="fas fa-exclamation-triangle me-2"></i>
+									<div>
+										Поcтбеки не созданы, вы можете их создать в разделе PostBacks
+									</div>
+								</div>
+								{% endif %}
+							</div> <!-- /row -->
+						</div> <!-- /item -->
+
+						<div class="border-top mt-4 mb-4"></div>
+
+						<div class="mb-4">
+							<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4">
+								Ссылка
+							</div> <!-- /subtitle -->
+
+							<div class="input-group">
+								<input type="text" id="url" name="url" placeholder="{{ url_link }}" class="form-control" value="{{ url_link }}" url="https://{{ domain }}/{{ uid }}" readonly="true" aria-label="https://" aria-describedby="streamLink">
+
+								<button onclick="copyTextToClipboard(url.value); return false;" class="btn btn-secondary text-white" type="button" id="streamLink" >
+									Скопировать
+								</button>
+							</div>
+						</div>
+
+						<div class="border-top mt-4 mb-4"></div>
+
+						<div class="mb-4">
+							<div class="mb-4">
+								<div class="form-check">
+									<input class="form-check-input" onclick="myFun(event)" name="settings" type="checkbox" value="" id="cbStreamOther">
+
+									<label class="form-check-label" for="cbStreamOther">
+										Дополнительные данные
+									</label>
+								</div> <!-- /form-check -->
+							</div> <!-- /subtitle -->
+
+
+							<div class="input-group mb-3">
+								<span class="input-group-text" id="cbStreamClickID">
+									ClickID
+								</span>
+
+								<input disabled type="text" value="{{ sub_params.cid }}" id="click_id" onchange="url_gen()" onclick="url_gen()" oninput="url_gen()" class="form-control" placeholder="{click_id}" aria-label="{click_id}" aria-describedby="cbStreamClickID">
+							</div> <!-- /input-group -->
+
+
+							<div class="row">
+								<div class="col-12 col-md-6 col-lg-4 mt-4">
+									<div class="input-group">
+										<span class="input-group-text" id="cbStreamSubAcc-1">
+											Субаккаунт 1
+										</span>
+
+										<input disabled type="text" value="{{ sub_params.sub1 }}" id="sub1" onchange="url_gen()" onclick="url_gen()" oninput="url_gen()" class="form-control" placeholder="" aria-label="" aria-describedby="cbStreamSubAcc-1">
+									</div> <!-- /input-group -->
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-6 col-lg-4 mt-4">
+									<div class="input-group">
+										<span class="input-group-text" id="cbStreamSubAcc-2">
+											Субаккаунт 2
+										</span>
+
+										<input disabled type="text" value="{{ sub_params.sub2 }}" id="sub2" onchange="url_gen()" onclick="url_gen()" oninput="url_gen()" class="form-control" placeholder="" aria-label="" aria-describedby="cbStreamSubAcc-2">
+									</div> <!-- /input-group -->
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-6 col-lg-4 mt-4">
+									<div class="input-group">
+										<span class="input-group-text" id="cbStreamSubAcc-3">
+											Субаккаунт 3
+										</span>
+
+										<input disabled type="text" value="{{ sub_params.sub3 }}" id="sub3" onchange="url_gen()" onclick="url_gen()" oninput="url_gen()" class="form-control" placeholder="" aria-label="" aria-describedby="cbStreamSubAcc-3">
+									</div> <!-- /input-group -->
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-6 col-lg-4 mt-4">
+									<div class="input-group">
+										<span class="input-group-text" id="cbStreamSubAcc-4">
+											Субаккаунт 4
+										</span>
+
+										<input disabled type="text" value="{{ sub_params.sub4 }}" id="sub4" onchange="url_gen()" onclick="url_gen()" oninput="url_gen()" class="form-control" placeholder="" aria-label="" aria-describedby="cbStreamSubAcc-4">
+									</div> <!-- /input-group -->
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-6 col-lg-4 mt-4">
+									<div class="input-group">
+										<span class="input-group-text" id="cbStreamSubAcc-5">
+											Субаккаунт 5
+										</span>
+
+										<input disabled type="text" value="{{ sub_params.sub5 }}" id="sub5" onchange="url_gen()" onclick="url_gen()" oninput="url_gen()" class="form-control" placeholder="" aria-label="" aria-describedby="cbStreamSubAcc-5">
+									</div> <!-- /input-group -->
+								</div> <!-- /col -->
+							</div> <!-- /row -->
+
+
+							<div class="row mt-3">
+								<div class="col-12 col-md-6 col-lg-4 mt-4">
+									<div class="input-group">
+										<span class="input-group-text" id="cbStreamUtmSource">
+											utm source
+										</span>
+
+										<input disabled type="text" value="{{ sub_params.utm_source }}"  id="utm_source" onchange="url_gen()" onclick="url_gen()" oninput="url_gen()" class="form-control" placeholder="" aria-label="" aria-describedby="cbStreamUtmSource">
+									</div> <!-- /input-group -->
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-6 col-lg-4 mt-4">
+									<div class="input-group">
+										<span class="input-group-text" id="cbStreamUtmMedium">
+											utm medium
+										</span>
+
+										<input disabled type="text" value="{{ sub_params.utm_medium }}" id="utm_medium" onchange="url_gen()" onclick="url_gen()" oninput="url_gen()" class="form-control" placeholder="" aria-label="" aria-describedby="cbStreamUtmMedium">
+									</div> <!-- /input-group -->
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-6 col-lg-4 mt-4">
+									<div class="input-group">
+										<span class="input-group-text" id="cbStreamUtmCampaign">
+											utm campaign
+										</span>
+
+										<input disabled type="text" value="{{ sub_params.utm_campaign }}" id="utm_campaign" onchange="url_gen()" onclick="url_gen()" oninput="url_gen()" class="form-control" placeholder="" aria-label="" aria-describedby="cbStreamUtmCampaign">
+									</div> <!-- /input-group -->
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-6 col-lg-4 mt-4">
+									<div class="input-group">
+										<span class="input-group-text" id="cbStreamUtmContent">
+											utm content
+										</span>
+
+										<input disabled type="text" value="{{ sub_params.utm_content }}" id="utm_content" onchange="url_gen()" onclick="url_gen()" oninput="url_gen()" class="form-control" placeholder="" aria-label="" aria-describedby="cbStreamUtmContent">
+									</div> <!-- /input-group -->
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-6 col-lg-4 mt-4">
+									<div class="input-group">
+										<span class="input-group-text" id="cbStreamUtmTerm">
+											utm term
+										</span>
+
+										<input disabled type="text" value="{{ sub_params.utm_term }}" id="utm_term" onchange="url_gen()" onclick="url_gen()" oninput="url_gen()" class="form-control" placeholder="" aria-label="" aria-describedby="cbStreamUtmTerm">
+									</div> <!-- /input-group -->
+								</div> <!-- /col -->
+							</div> <!-- /row -->
+						</div>
+
+						<div class="d-grid">
+							<button class="btn btn-primary save_stream" type="submit">
+								Внести изменения
+							</button>
+						</div>
+					</form>
+
+					{% else %}
+					<div class="alert alert-warning" role="alert">
+						<h4 class="alert-heading">
+							<i class="fa-regular fa-octagon-exclamation me-2"></i>
+							Внимание!
+						</h4>
+						<p class="mb-0">Доступ закрыт</p>
+					</div> <!-- /alert -->
+					{% endif %}
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!-- /row -->
+
+<script>
+
+	const myCheckBox = $('#cbStreamOther');
+	const click_id = $('#click_id');
+	const sub1 = $('#sub1');
+	const sub2 = $('#sub2');
+	const sub3 = $('#sub3');
+	const sub4 = $('#sub4');
+	const sub5 = $('#sub5');
+	const utm_source = $('#utm_source');
+	const utm_medium = $('#utm_medium');
+	const utm_campaign = $('#utm_campaign');
+	const utm_content = $('#utm_content');
+	const utm_term = $('#utm_term');
+	var copy_link = document.getElementById('url');
+
+	function myFun () {
+		if (myCheckBox.click) {
+			if (myCheckBox.attr('checked')) {
+				myCheckBox.removeAttr('checked');
+				click_id.attr('disabled', 'true');
+				sub1.attr('disabled', 'true');
+				sub2.attr('disabled', 'true');
+				sub3.attr('disabled', 'true');
+				sub4.attr('disabled', 'true');
+				sub5.attr('disabled', 'true');
+				utm_source.attr('disabled', 'true');
+				utm_medium.attr('disabled', 'true');
+				utm_campaign.attr('disabled', 'true');
+				utm_content.attr('disabled', 'true');
+				utm_term.attr('disabled', 'true');
+				copy_link.value = 'https://{{domain}}/'+ ('{{uid}}');
+			} else {
+				myCheckBox.attr('checked', 'true');
+				click_id.removeAttr('disabled');
+				sub1.removeAttr('disabled');
+				sub2.removeAttr('disabled');
+				sub3.removeAttr('disabled');
+				sub4.removeAttr('disabled');
+				sub5.removeAttr('disabled');
+				utm_source.removeAttr('disabled');
+				utm_medium.removeAttr('disabled');
+				utm_campaign.removeAttr('disabled');
+				utm_content.removeAttr('disabled');
+				utm_term.removeAttr('disabled');
+			};
+		};
+	};
+
+	function url_gen(){
+		var url=$("#url").attr("url");
+		var param="";
+		if($("#click_id").val().length>0){
+			param+="&cid="+$("#click_id").val();
+		} if($("#sub1").val().length>0){
+			param+="&sub1="+$("#sub1").val();
+		} if($("#sub2").val().length>0){
+			param+="&sub2="+$("#sub2").val();
+		} if($("#sub3").val().length>0){
+			param+="&sub3="+$("#sub3").val();
+		} if($("#sub4").val().length>0){
+			param+="&sub4="+$("#sub4").val();
+		} if($("#sub5").val().length>0){
+			param+="&sub5="+$("#sub5").val();
+		} if($("#utm_source").val().length>0){
+			param+="&utm_source="+$("#utm_source").val();
+		} if($("#utm_medium").val().length>0){
+			param+="&utm_medium="+$("#utm_medium").val();
+		} if($("#utm_campaign").val().length>0){
+			param+="&utm_campaign="+$("#utm_campaign").val();
+		} if($("#utm_content").val().length>0){
+			param+="&utm_content="+$("#utm_content").val();
+		} if($("#utm_term").val().length>0){
+			param+="&utm_term="+$("#utm_term").val();
+		} if(param.length>0){
+			$("#url").val(url+"?"+param.substring(1));
+		}else{
+			$("#url").val(url);
+		}
+	}	
+
+	function load_offer(id, landing){
+		$(".offerselected").removeClass('offer-select');
+		$("#offerselect"+id).addClass('offer-select');
+		$("#offerval").val(id);
+		$("#landval").val("");
+	}
+	function change_offer(id, landing){
+		$(".offerselected").removeClass('offer-select');
+		$(".offerselected").addClass('opacity-50');
+		$("#offerselect"+id).addClass('offer-select');
+		$("#offerselect"+id).removeClass('opacity-50');
+		$("#offerval").val(id);
+		$("#landval").val('');
+		$(".lpselected").addClass('opacity-50');
+		$(".lpselected").removeClass('offer-lp-select');
+	};
+	function chland(land){
+		$(".lpselected").addClass('opacity-50');
+		$(".lpselected").removeClass('offer-lp-select');
+		$("#lpselect"+land).addClass('offer-lp-select');
+		$("#lpselect"+land).removeClass('opacity-50');
+		$("#landval").val(land);
+	};
+
+	function show_hidden () {
+		var offer_id = document.getElementById('offerval').value;
+		var lan_id = $('.lands_' + offer_id);
+		var all_land = $('.lands');
+		all_land.hide();
+		lan_id.show();
+		$("#landval").val('');
+	};
+
+</script>
+
+<script>
+	
+	var url = document.location.href;
+	var a = document.cookie.split(';');
+	var token = '';
+
+	function remove_add_data(){
+		$('.additional_landing').remove();
+	};
+
+	for (let i = 0; i < a.length; i++) {
+		var b = a[i].split('=')
+		b[0] = b[0].replace(/\s+/g, '')
+		if (b[0] == 'csrftoken') {
+			token = b[1]
+		}
+	};
+
+	var landings = document.querySelectorAll('.landcheck');
+
+	function remove_add_data(){
+		$('.additional_landing').remove();
+	}
+
+	function selectAddEl(element, input, value=null){
+		var options = ``;
+		for (let i=0; i<element.options.length; i++){
+			if (value){
+				if (value == element.options[i].value){
+					options = options.concat(` <option selected value="${element.options[i].value}">${element.options[i].name}</option> `);
+				}else{
+					options = options.concat(` <option value="${element.options[i].value}">${element.options[i].name}</option> `);
+				}
+			}else{
+				if(element.options[i].default){
+					options = options.concat(` <option selected value="${element.options[i].value}">${element.options[i].name}</option> `);
+				}else{
+					options = options.concat(` <option value="${element.options[i].value}">${element.options[i].name}</option> `);
+				}
+			}
+		}
+		input =
+			`<div class="col-12 col-md-3 mb-3 mt-3">
+				<label for="${element.name}" class="form-label">
+					${element.title}
+					<i class="fa-solid fa-circle-info text-info ms-1" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${element.description}"></i>
+				</label>
+				<select autocomplete="off" class="form-select" name="${element.name}" id="${element.name}">
+					${options}
+				</select>
+			</div>`
+		return input;
+	}
+
+	function textAddEl(element, input, value=null){
+		if (!element.placeholder){
+			element.placeholder = ''
+		}
+		if(value){
+			input = `<div class="col-12 col-md-3 mb-3 mt-3">
+				<label for="${element.name}" class="form-label">
+					${element.title}
+					<i class="fa-solid fa-circle-info text-info ms-1" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${element.description}"></i>
+				</label>
+				<input class="form-control" name="${element.name}" id="${element.name}" placeholder="${element.placeholder}" value="${value}">
+			</div>`
+		}else{
+			input = `<div class="col-12 col-md-3 mb-3 mt-3">
+				<label for="${element.name}" class="form-label">
+					${element.title}
+					<i class="fa-solid fa-circle-info text-info ms-1" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${element.description}"></i>
+				</label>
+				<input class="form-control" name="${element.name}" id="${element.name}" placeholder="${element.placeholder}" value="${element.value}">
+			</div>`
+		}
+		return input;
+	}
+
+	function radioEl(element, input, value=null){
+		var radioEL = ''
+		for (let i=0; i<element.options.length; i++){
+			if (value){
+				if(value == element.options[i].value){
+					var radio = `
+						<div class="form-radio">
+							<input class="form-check-input" name="finish" type="radio" value="${element.options[i].value}" id="radio_${element.options[i].value}" checked>
+							<label class="form-check-label" for="radio_${element.options[i].value}">
+								${element.options[i].name}
+								<i class="fa-solid fa-circle-info text-info ms-1" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${element.options[i].title}"></i>
+							</label>
+						</div>
+						`
+						radioEL = radioEL + radio
+				}else{
+					var radio = `
+						<div class="form-radio">
+							<input class="form-check-input" name="finish" type="radio" value="${element.options[i].value}" id="radio_${element.options[i].value}">
+							<label class="form-check-label" for="radio_${element.options[i].value}">
+								${element.options[i].name}
+								<i class="fa-solid fa-circle-info text-info ms-1" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${element.options[i].title}"></i>
+							</label>
+						</div>
+						`
+					radioEL = radioEL + radio
+				}
+			}else{
+				if(element.options[i].default){
+					var radio = `
+						<div class="form-radio">
+							<input class="form-check-input" name="finish" type="radio" value="${element.options[i].value}" id="radio_${element.options[i].value}" checked>
+							<label class="form-check-label" for="radio_${element.options[i].value}">
+								${element.options[i].name}
+								<i class="fa-solid fa-circle-info text-info ms-1" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${element.options[i].title}"></i>
+							</label>
+						</div>
+						`
+					radioEL = radioEL + radio
+				}else{
+					var radio = `
+						<div class="form-radio">
+							<input class="form-check-input" name="finish" type="radio" value="${element.options[i].value}" id="radio_${element.options[i].value}">
+							<label class="form-check-label" for="radio_${element.options[i].value}">
+								${element.options[i].name}
+								<i class="fa-solid fa-circle-info text-info ms-1" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${element.options[i].title}"></i>
+							</label>
+						</div>
+						`
+					radioEL = radioEL + radio
+				}
+			}
+		}
+		input = `
+			<div class="col-12 col-md-3 mb-3 mt-3">
+				<label class="form-label">
+					Конечный текст
+					<i class="fa-solid fa-circle-info text-info ms-1" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${element.title}"></i>
+				</label>
+				${radioEL}
+			</div>`
+		return input;
+	};
+
+	if({{ stream_get.landingelement_data|safe }} != "0"){
+		var add_elements = {{ land_response_main|safe }};
+		var has_elements = {{ stream_get.landingelement_data|safe }};
+
+		var mainDivAdditionalLanding = `
+				<div class="border-top mt-4 mb-4 additional_landing"></div>
+				<div class="mb-4 additional_landing">
+					<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4 ">
+						Дополнительные данные
+					</div> <!-- /subtitle -->
+					<div class="row additional_landing_information">
+					</div>
+				</div>`;
+
+		$('#landingsInformation').after(mainDivAdditionalLanding);
+		var input = ``;
+		console.log('add_elements', add_elements);
+		console.log('has_elements', has_elements);
+		for (let k=0; k<add_elements.length; k++){
+			if (add_elements[k].type == 'select'){
+				if(has_elements[add_elements[k].name]){
+					input = selectAddEl(add_elements[k], input, has_elements[add_elements[k].name]);
+				}else{
+					input = selectAddEl(add_elements[k], input);
+				}
+			}else if (add_elements[k].type == 'text'){
+				if(has_elements[add_elements[k].name]){
+					input = textAddEl(add_elements[k], input, has_elements[add_elements[k].name]);
+				}else{
+					input = textAddEl(add_elements[k], input);
+				}
+			}else if (add_elements[k].type == 'radio'){
+				if (has_elements[add_elements[k].name]){
+					input = radioEl(add_elements[k], input, has_elements[add_elements[k].name]);
+				}else{
+					input = radioEl(add_elements[k], input);
+				}
+			}else if (add_elements[k].type == 'promo'){
+				if(has_elements[add_elements[k].name]){
+					input = selectAddEl(add_elements[k], input, has_elements[add_elements[k].name]);
+				}else{
+					input = selectAddEl(add_elements[k], input);
+				}
+			}
+		$('.additional_landing_information').append(input);
+		}
+	};
+
+	for (let i=0; i<landings.length; i++){
+		landings[i].addEventListener('click', function(event){
+			if(event.currentTarget == landings[i] && landings[i].getAttribute('data-add') != 'None'){
+				$('.additional_landing').remove();
+				$.ajax(
+					{
+						url: url,
+						method: 'POST',
+						data: {
+							csrfmiddlewaretoken: token,
+							type: 'land_select',
+							land_id: landings[i].getAttribute('data-land')
+						}
+					}
+				).then(function(result){
+					if ($('.additional_landing')){
+						$('.additional_landing').remove();
+					}
+					var res = JSON.parse(result);
+					var add_elements = JSON.parse(res.elements).elements;
+					var mainDivAdditionalLanding = `
+						<div class="border-top mt-4 mb-4 additional_landing"></div>
+						<div class="mb-4 additional_landing">
+							<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4 ">
+								Дополнительные данные
+							</div> <!-- /subtitle -->
+							<div class="row additional_landing_information">
+							</div>
+						</div>`
+
+					$('#landingsInformation').after(mainDivAdditionalLanding)
+					var input = ``	
+					for (let k=0; k<add_elements.length; k++){
+						if (add_elements[k].type == 'select'){
+
+							input = selectAddEl(add_elements[k], input);
+
+						}else if (add_elements[k].type == 'text'){
+							
+							input = textAddEl(add_elements[k], input);
+							
+						}else if (add_elements[k].type == 'radio'){
+							input = radioEl(add_elements[k], input);
+						}
+					$('.additional_landing_information').append(input);
+					$('i[data-bs-toggle="popover"]').popover();
+					}
+				}).catch(function(err){
+					var x = 1
+				})
+			}else{
+				$('.additional_landing').remove();
+			}
+		})
+	}
+
+
+</script>
+
+<script>
+	
+	var name_message = 
+		`<div class="invalid-feedback streamName">
+			Введите имя потока
+		</div>`;
+
+	var offland_message = 
+		`<div class="alert alert-danger mb-3" role="alert">
+			<i class="fa-regular fa-octagon-exclamation me-2"></i>
+			Выберите Оффер и Лендинг
+		</div>`;
+
+	$('#streamName').on('input', function(){
+		if($('#streamName').val()){
+			$('.streamName').remove();
+			$('#streamName').removeClass('is-invalid');
+			$('#streamName').addClass('is-valid');
+		}else{
+			$('#streamName').addClass('is-invalid');
+			$('#streamName').after(name_message);
+		}
+	})
+
+	$('form').on('click', function(event){
+		if ($('#landval').val()){
+			$('.alert-danger').remove();
+		}
+	})
+
+	$('.save_stream').on('click', function(event){
+		$('.streamName').remove();
+		$('.alert-danger').remove();
+		if(!$('#streamName').val() || (!$('#offerval').val() || !$('#landval').val())){
+			if(!$('#streamName').val()){
+				$('#streamName').addClass('is-invalid');
+				$('#streamName').after(name_message);
+			}
+			if(!$('#offerval').val() || !$('#landval').val()){
+				$('#landval').after(offland_message)
+			}
+			window.scrollTo(0, 0);
+			event.preventDefault();
+		}
+	})
+
+</script>
+
+{% endblock content %}

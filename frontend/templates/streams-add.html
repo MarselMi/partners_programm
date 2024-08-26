@@ -1,0 +1,424 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card mb-4">
+				<div class="card-body">
+					<form action="#" method="POST">
+						{% csrf_token %}
+						<div class="mb-4">
+							<div class="h6 fw-bold text-uppercase mb-4">
+								Название
+							</div> <!-- /subtitle -->
+							<input type="text" class="form-control" name="streamName" id="streamName" placeholder="Поток 1">
+						</div> <!-- /item -->
+
+						<input type="hidden" id="offerval" name="offer" value="" /> <input type="hidden" id="landval" name="land" value="" />
+
+						<div class="border-top mt-4 mb-4"></div>
+
+						<div class="mb-4">
+							<div class="h6 fw-bold text-uppercase mb-4 offerAndLands">
+								Оффер
+							</div> <!-- /subtitle -->
+
+							<div class="row">
+								{% for offer in request.session.offers_list %}
+								<div class="col-12 col-md-3 col-sm-4 mt-3">
+									<div class="offerselected opacity-50" id="offerselect{{ offer.id }}">
+										<a onclick="change_offer({{ offer.id }}); show_hidden(event); remove_add_data();" name="offer{{ offer.id }}">
+											<img class="img-fluid" src="https://cdn-offers.offering.pro/media/{{ offer.screenshot }}" style="height: 100%; width: 100%" alt="">
+										</a>
+									</div>
+								</div> <!-- /offers-logo -->
+								{% endfor %}
+							</div>
+						</div> <!-- /item -->
+						<div class="border-top mt-4 mb-4"></div>
+
+
+						<div class="mb-4" id="landingsInformation">
+							<div class="h6 fw-bold text-uppercase mb-4">
+								Лендинг
+							</div> <!-- /subtitle -->
+
+							<div class="row" >
+								{% for land in landings_list %}
+
+								<div class="landcheck col-12 col-md-3 col-sm-4 text-center lands lands_{{ land.offer_id_id }}" data-add="{{ land.landing_elements }}" data-land="{{ land.id }}" style="display: none;" value="{{ land.offer_id_id }}" id="{{ land.offer_id_id }}">
+									<figure class="figure">
+										<div id="lpselect{{ land.id }}" class="lpselected">
+											<a data-land-id="{{ land.id }}" data-off-id="{{ land.offer_id_id }}" class="landing_by_offer" onclick="chland({{ land.id }}); return false;" name="lpselect_{{ land.id }}" href="#;">
+												<img class="figure-img img-fluid" src="https://cdn-offers.offering.pro/media/{{ land.screenshot }}" alt="">
+											</a>
+										</div>
+										<figcaption class="figure-caption text-center">{{ land.name }}</figcaption>
+									</figure>
+
+								</div> <!-- /offers-land -->
+								{% endfor %}
+							</div>
+						</div> <!-- /item -->
+
+
+						<div class="border-top mt-4 mb-4"></div>
+
+
+						<div class="mb-4">
+							<div class="h6 fw-bold text-uppercase mb-2">
+								Трекеры и пиксели
+							</div> <!-- /subtitle -->
+
+							<div class="row">
+								<div class="col-12 col-md-4 col-lg-3 col-xl-2 mt-3">
+									<label for="streamTrackerYaMetrika" class="form-label">
+										Яндекс.Метрика
+									</label>
+
+									<input type="text" class="form-control" name="streamTrackerYaMetrika" id="streamTrackerYaMetrika" placeholder="XXXXXXXX">
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-4 col-lg-3 col-xl-2 mt-3">
+									<label for="streamTrackerGoogleAn" class="form-label">
+										Google Analytics
+									</label>
+
+									<input type="text" class="form-control" name="streamTrackerGoogleAn" id="streamTrackerGoogleAn" placeholder="XXXXXXXX">
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-4 col-lg-3 col-xl-2 mt-3">
+									<label for="streamTrackerTopMailRu" class="form-label">
+										ТОП Mail.ru
+									</label>
+
+									<input type="text" class="form-control" name="streamTrackerTopMailRu" id="streamTrackerTopMailRu" placeholder="XXXXXXXX">
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-4 col-lg-3 col-xl-2 mt-3">
+									<label for="streamTrackerFBpixel" class="form-label">
+										Facebook pixel
+									</label>
+
+									<input type="text" class="form-control" name="streamTrackerFBpixel" id="streamTrackerFBpixel" placeholder="XXXXXXXX">
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-4 col-lg-3 col-xl-2 mt-3">
+									<label for="streamTrackerVKcounter" class="form-label">
+										ВКонтакте счётчик
+									</label>
+
+									<input type="text" class="form-control" name="streamTrackerVKcounter" id="streamTrackerVKcounter" placeholder="XXXXXXXX">
+								</div> <!-- /col -->
+
+								<div class="col-12 col-md-4 col-lg-3 col-xl-2 mt-3">
+									<label for="streamTrackerTTpixel" class="form-label">
+										TikTok pixel
+									</label>
+
+									<input type="text" class="form-control" name="streamTrackerTTpixel" id="streamTrackerTTpixel" placeholder="XXXXXXXX">
+								</div> <!-- /col -->
+							</div> <!-- /row -->
+						</div> <!-- /item -->
+
+
+						<div class="border-top mt-4 mb-4"></div>
+
+
+						<div class="mb-4">
+							<div class="h6 fw-bold text-uppercase mb-2">
+								PostBacks
+							</div> <!-- /subtitle -->
+							<div class="row">
+								{% if postbacks_partner %}
+									{% for postback in postbacks_partner %}
+										<div class="col-12 col-md-4 col-lg-3 mt-3">
+											<div class="form-check">
+												<input class="form-check-input" name="postbacks" type="checkbox" value="{{ postback.id }}" id="postback_{{ postback.id }}">
+												<label class="form-check-label" for="postback_{{ postback.id }}">
+													Имя: {{ postback.name }}
+													<br>
+													<span class="small">
+														События: {% for event in postback.event_id %}
+														{{ event|postback_event }}
+														{% endfor %}
+														<br>
+														status: {{ postback.status }}
+													</span>
+												</label>
+											</div> <!-- /form-check -->
+										</div> <!-- /col -->
+									{% endfor %}
+								{% else %}
+								<div class="alert alert-warning d-flex align-items-center mb-0" role="alert">
+									<i class="fas fa-exclamation-triangle me-2"></i>
+									<div>
+										Поcтбеки не созданы, вы можете их создать в разделе PostBacks
+									</div>
+								</div>
+								{% endif %}
+							</div> <!-- /row -->
+						</div> <!-- /item -->
+
+
+						<div class="border-top mt-4 mb-4"></div>
+
+
+						<div class="alert alert-secondary mb-5" role="alert">
+							<span class="alert-inner--icon"><i class="fe fe-info"></i></span>
+							<span class="alert-inner--text">
+								Ссылка, для привлечения трафика, будет доступна после создания потока.
+							</span>
+						</div>
+
+						<div class="text-center">
+						<button class="btn btn-primary save_stream">
+							Создать
+						</button>
+					</div>
+					</form>
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!-- /row -->
+
+	<script>
+		
+		function load_offer(id, landing){
+			$(".offerselected").removeClass('offer-select');
+			$("#offerselect"+id).addClass('offer-select');
+			$("#offerval").val(id);
+			$("#landval").val("");
+		}
+		function change_offer(id, landing){
+			$(".offerselected").removeClass('offer-select');
+			$(".offerselected").addClass('opacity-50');
+			$("#offerselect"+id).addClass('offer-select');
+			$("#offerselect"+id).removeClass('opacity-50');
+			$("#offerval").val(id);
+			$("#landval").val('');
+			$(".lpselected").addClass('opacity-50');
+			$(".lpselected").removeClass('offer-lp-select');
+		};
+		function chland(land){
+			$(".lpselected").addClass('opacity-50');
+			$(".lpselected").removeClass('offer-lp-select');
+			$("#lpselect"+land).addClass('offer-lp-select');
+			$("#lpselect"+land).removeClass('opacity-50');
+			$("#landval").val(land);
+		};
+
+		function show_hidden () {
+			var offer_id = document.getElementById('offerval').value;
+			var lan_id = $('.lands_' + offer_id);
+			var all_land = $('.lands');
+			all_land.hide();
+			lan_id.show();
+			$("#landval").val('');
+		};
+
+	</script>
+
+	<script>
+		
+		var url = document.location.href;
+		var a = document.cookie.split(';');
+		var token = ''
+
+		for (let i = 0; i < a.length; i++) {
+			var b = a[i].split('=')
+			b[0] = b[0].replace(/\s+/g, '')
+			if (b[0] == 'csrftoken') {
+				token = b[1]
+			}
+		}
+		function remove_add_data(){
+			$('.additional_landing').remove();
+		}
+		
+		var landings = document.querySelectorAll('.landcheck')
+
+		for (let i=0; i<landings.length; i++){
+			landings[i].addEventListener('click', function(event){
+				if(event.currentTarget == landings[i] && landings[i].getAttribute('data-add') != 'None'){
+					$('.additional_landing').remove();
+					$.ajax(
+						{
+							url: url,
+							method: 'POST',
+							data: {
+								csrfmiddlewaretoken: token,
+								type: 'land_select',
+								land_id: landings[i].getAttribute('data-land')
+							}
+						}
+					).then(function(result){
+						if ($('.additional_landing')){
+							$('.additional_landing').remove();
+						}
+						var res = JSON.parse(result);
+						var add_elements = JSON.parse(res.elements).elements;
+						
+						var mainDivAdditionalLanding = `
+							<div class="border-top mt-4 mb-4 additional_landing"></div>
+							<div class="mb-4 additional_landing">
+								<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4 ">
+									Дополнительные данные
+								</div> <!-- /subtitle -->
+								<div class="row additional_landing_information">
+								</div>
+							</div>`
+
+						$('#landingsInformation').after(mainDivAdditionalLanding)
+						var input = ``	
+						for (let k=0; k<add_elements.length; k++){
+							
+							if (add_elements[k].type == 'select'){
+
+								input = selectAddEl(add_elements[k], input);
+
+							}else if (add_elements[k].type == 'text'){
+								
+								input = textAddEl(add_elements[k], input);
+								
+							}else if (add_elements[k].type == 'radio'){
+								input = radioEl(add_elements[k], input);
+							}
+						$('.additional_landing_information').append(input);
+						$('i[data-bs-toggle="popover"]').popover();
+						}
+					}).catch(function(err){
+						var x = 1
+					})
+				}else{
+					$('.additional_landing').remove();
+				}
+			})
+		}
+
+		function selectAddEl(element, input){
+			var options = ``
+			for (let i=0; i<element.options.length; i++){
+				if (element.options[i].default){
+					options = options.concat(` <option selected value="${element.options[i].value}">${element.options[i].name}</option> `)
+				}else{
+					options = options.concat(` <option value="${element.options[i].value}">${element.options[i].name}</option> `)
+				}
+			}
+			input =
+				`<div class="col-12 col-md-3 mb-3 mt-3">
+					<label for="${element.name}" class="form-label">
+						${element.title}
+						<i class="fa-solid fa-circle-info text-info ms-1" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${element.description}"></i>
+					</label>
+					<select autocomplete="off" class="form-select" name="${element.name}" id="${element.name}">
+						${options}
+					</select>
+				</div>`
+			return input;
+		}
+
+		function textAddEl(element, input){
+			if (!element.placeholder){
+				element.placeholder = ''
+			}
+			input = `<div class="col-12 col-md-3 mb-3 mt-3">
+				<label for="${element.name}" class="form-label">
+					${element.title}
+					<i class="fa-solid fa-circle-info text-info ms-1" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${element.description}"></i>
+				</label>
+				<input class="form-control" name="${element.name}" id="${element.name}" placeholder="${element.placeholder}" value="${element.value}">
+			</div>`
+			return input;
+		}
+		
+		function radioEl(element, input){
+			var radioEL = ''
+			for (let i=0; i<element.options.length; i++){
+				if(element.options[i].default){
+					var radio = `
+					<div class="form-radio">
+						<input class="form-check-input" name="finish" type="radio" value="${element.options[i].value}" id="radio_${element.options[i].value}" checked>
+						<label class="form-check-label" for="radio_${element.options[i].value}">
+							${element.options[i].name}
+							<i class="fa-solid fa-circle-info text-info ms-1" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${element.options[i].title}"></i>
+						</label>
+					</div>
+					`
+					radioEL = radioEL + radio
+				}else{
+					var radio = `
+					<div class="form-radio">
+						<input class="form-check-input" name="finish" type="radio" value="${element.options[i].value}" id="radio_${element.options[i].value}">
+						<label class="form-check-label" for="radio_${element.options[i].value}">
+							${element.options[i].name}
+							<i class="fa-solid fa-circle-info text-info ms-1" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${element.options[i].title}"></i>
+						</label>
+					</div>
+					`
+					radioEL = radioEL + radio
+				}
+			}
+			input =
+				`<div class="col-12 col-md-3 mb-3 mt-3">
+					<label class="form-label">
+						Конечный текст
+						<i class="fa-solid fa-circle-info text-info ms-1" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${element.title}"></i>
+					</label>
+					${radioEL}
+				</div>`
+			return input;
+		}
+
+	</script>
+
+	<script>
+
+		var name_message = 
+			`<div class="invalid-feedback streamName">
+				Введите имя потока
+			</div>`;
+
+		var offland_message = 
+					`<div class="alert alert-danger mb-3" role="alert">
+						<i class="fa-regular fa-octagon-exclamation me-2"></i>
+						Выберите Оффер и Лендинг
+					</div>`;
+
+		$('#streamName').on('input', function(){
+			if($('#streamName').val()){
+				$('.streamName').remove();
+				$('#streamName').removeClass('is-invalid');
+				$('#streamName').addClass('is-valid');
+			}else{
+				$('#streamName').addClass('is-invalid');
+				$('#streamName').after(name_message);
+			}
+		})
+
+		$('form').on('click', function(event){
+			if ($('#landval').val()){
+				$('.alert-danger').remove();
+			}
+		})
+
+		$('.save_stream').on('click', function(event){
+			$('.streamName').remove();
+			$('.alert-danger').remove();
+			if(!$('#streamName').val() || (!$('#offerval').val() || !$('#landval').val())){
+				if(!$('#streamName').val()){
+					$('#streamName').addClass('is-invalid');
+					$('#streamName').after(name_message);
+				}
+				if(!$('#offerval').val() || !$('#landval').val()){
+					$('#landval').after(offland_message)
+				}
+				window.scrollTo(0, 0);
+				event.preventDefault();
+			}
+		})
+
+	</script>
+
+{% endblock content %}

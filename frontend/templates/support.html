@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row">
+		<div class="col-12 col-xl-4">
+			<div class="card mb-4">
+				<div class="chat-container">
+					<nav class="nav nav-pills nav-fill border-bottom p-3">
+
+						<button class="nav-link active" onclick="changeEl(event)"  data-bs-toggle="tab">
+							Все
+						</button>
+
+						<button class="nav-link" onclick="changeEl(event)" data-bs-toggle="tab">
+							Ваши
+						</button>
+
+						<button class="nav-link" onclick="changeEl(event)" data-bs-toggle="tab">
+							Системные
+						</button>
+
+						<button class="nav-link" data-bs-toggle="modal" data-bs-target="#newTicketModal">
+							Новое
+						</button>
+
+					</nav> <!-- /chat-select -->
+
+					<div class="chat-list chat-list-user pb-3">
+						{% for tickets in all_tickets %}
+						<div class="chat-list-item d-flex align-items-center pt-3 pb-3 ps-3 pe-3 border-bottom" id="{{ tickets.id }}" onclick="selectEl(event)">
+							<div class="position-relative me-3">
+								<span class="d-flex align-items-center justify-content-center text-bg-outline-secondary rounded-circle" style="width: 40px; height: 40px;">
+									<i class="fa-regular fa-circle-user"></i>
+								</span>
+
+								{% if tickets.unread_messages %}
+								<span class="badge text-bg-danger text-white d-flex align-items-center rounded-pill position-absolute top-0 start-0" style="font-size: 7px;" data-bs-toggle="tooltip" data-bs-title="Новых ответов: {{ tickets.unread_messages }}">
+									{{ tickets.unread_messages }}
+								</span>
+								{% endif %}
+
+							</div> <!-- /avatar -->
+
+							<div class="small flex-grow-1">
+								<div class="d-flex align-items-start">
+									<div class="me-2">
+										{% if tickets.theme %}
+											{{ tickets.theme }}
+										{% else %}
+											Тема отстутствует
+										{% endif %}
+									</div>
+									{% if tickets.status == 'OPEN' %}
+									<div id="status-{{tickets.id}}" class="badge bg-success ms-auto ticket-status-{{tickets.id}}">
+										Открыт
+									</div>
+									{% elif tickets.status == 'CLOSE' %}
+									<div id="status-{{tickets.id}}" class="badge text-bg-outline-secondary  ms-auto ticket-status-{{tickets.id}}">
+										Закрыт
+									</div>
+									{% endif %}
+								</div>
+								<div class="text-muted">
+									{% if tickets.type == 'OUT' %}
+									{{ request.session.user }} / {{ tickets.category }}
+									{% else %}
+									{{ tickets.category }} / {{ request.session.user }}
+									{% endif %}
+								</div>
+							</div> <!-- /info -->
+						</div> <!-- /item -->
+						{% endfor %}
+					</div><!-- /chat-list -->
+
+					<div class="chat-list chat-list-user pb-3" hidden>
+						{% for tickets in partner_tickets %}
+						<div class="chat-list-item d-flex align-items-center pt-3 pb-3 ps-3 pe-3 border-bottom" id="{{ tickets.id }}" onclick="selectEl(event)">
+							<div class="position-relative me-3">
+								<span class="d-flex align-items-center justify-content-center text-bg-outline-secondary rounded-circle" style="width: 40px; height: 40px;">
+									<i class="fa-regular fa-circle-user"></i>
+								</span>
+
+								{% if tickets.unread_messages %}
+								<span class="badge text-bg-danger text-white d-flex align-items-center rounded-pill position-absolute top-0 start-0" style="font-size: 7px;" data-bs-toggle="tooltip" data-bs-title="Новых ответов: {{ tickets.unread_messages }}">
+									{{ tickets.unread_messages }}
+								</span>
+								{% endif %}
+							</div> <!-- /avatar -->
+
+							<div class="small flex-grow-1">
+								<div class="d-flex align-items-start">
+									<div class="me-2">
+										{% if tickets.theme %}
+											{{ tickets.theme }}
+										{% else %}
+											Тема отстутствует
+										{% endif %}
+									</div>
+									{% if tickets.status == 'OPEN' %}
+									<div id="status-{{tickets.id}}" class="badge bg-success ms-auto ticket-status-{{tickets.id}}">
+										Открыт
+									</div>
+									{% elif tickets.status == 'CLOSE' %}
+									<div id="status-{{tickets.id}}" class="badge text-bg-outline-secondary  ms-auto ticket-status-{{tickets.id}}">
+										Закрыт
+									</div>
+									{% endif %}
+								</div>
+								<div class="text-muted">
+									{{ request.session.user }} / {{ tickets.category }}
+								</div>
+							</div> <!-- /info -->
+						</div> <!-- /item -->
+						{% endfor %}
+					</div><!-- /chat-list -->
+
+					<div class="chat-list pb-3" hidden>
+						{% for tickets in sistem_tickets %}
+						<div class="chat-list-item d-flex align-items-center pt-3 pb-3 ps-3 pe-3 border-bottom" id="{{ tickets.id }}" onclick="selectEl(event)">
+							<div class="position-relative me-3">
+								<span class="d-flex align-items-center justify-content-center text-bg-outline-secondary rounded-circle" style="width: 40px; height: 40px;">
+									<i class="fa-regular fa-circle-user"></i>
+								</span>
+
+								{% if tickets.unread_messages %}
+								<span class="badge text-bg-danger text-white d-flex align-items-center rounded-pill position-absolute top-0 start-0" style="font-size: 7px;" data-bs-toggle="tooltip" data-bs-title="Новых ответов: {{ tickets.unread_messages }}">
+									{{ tickets.unread_messages }}
+								</span>
+								{% endif %}
+							</div> <!-- /avatar -->
+
+							<div class="small flex-grow-1">
+								<div class="d-flex align-items-start">
+									<div class="me-2">
+										{% if tickets.theme %}
+											{{ tickets.theme }}
+										{% else %}
+											Тема отстутствует
+										{% endif %}
+									</div>
+									{% if tickets.status == 'OPEN' %}
+									<div id="status-{{tickets.id}}" class="badge bg-success ms-auto ticket-status-{{tickets.id}}">
+										Открыт
+									</div>
+									{% elif tickets.status == 'CLOSE' %}
+									<div id="status-{{tickets.id}}" class="badge text-bg-outline-secondary  ms-auto ticket-status-{{tickets.id}}">
+										Закрыт
+									</div>
+									{% endif %}
+								</div>
+								<div class="text-muted">
+									{{ tickets.category }} / {{ request.session.user }}
+								</div>
+							</div> <!-- /info -->
+						</div> <!-- /item -->
+						{% endfor %}
+
+					</div><!-- /chat-list -->
+
+				</div> <!-- /chat-container -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+
+
+		<div class="col-12 col-xl-8">
+			<div class="card mb-4">
+				<div class="chat-container messages-chat-container">
+
+					<div class="chat-header header-unticket d-flex align-items-center border-bottom p-3">
+						{% if all_tickets %}
+						<h4 style="color: grey; margin: 0 auto;">Необходимо выбрать тикет!</h4>
+						{% else %}
+						<h4 style="color: grey; margin: 0 auto;">Необходимо создать тикет!</h4>
+						{% endif %}
+					</div>
+
+					<div class="chat-body p-3" id="chat-msg" name="hideShowMessage" ticket-id="{{ ticket_id }}">
+
+					</div> <!-- /chat-body -->
+
+				</div> <!-- /chat-container -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!-- /row -->
+
+	<div class="modal fade" id="newTicketModal" tabindex="-1" aria-labelledby="newTicketModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content border-0">
+				<form action="" name="newTicketForm" id="formSendTicket">
+					<div class="modal-header" >
+						<h5 class="modal-title" id="newTicketModalLabel">
+							Новый тикет
+						</h5> <!-- /modal-title -->
+
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div> <!-- /modal-header -->
+
+					<div class="modal-body" id="formSendTicketElem">
+						<div class="form-floating mb-3">
+							<input type="text" class="form-control" id="newTicketTitle" placeholder="Тема" name="newTicketTitle">
+							<label for="newTicketTitle">
+								Тема
+							</label>
+						</div> <!-- /form-floating -->
+
+						<div class="form-floating mb-3">
+							<select class="form-select" id="newTicketCats" aria-label="" name="newTicketCats">
+								<option value="1">Технический отдел</option>
+								<option value="2">Финансовый отдел</option>
+								<option value="3">Сотрудничество</option>
+								<option value="4">Обращение к директору</option>
+							</select>
+
+							<label for="newTicketCats">
+								Категория
+							</label>
+						</div> <!-- /form-floating -->
+
+						<div class="form-floating">
+							<textarea class="form-control" placeholder="Текст" name="newTicketText" id="newTicketText" style="height: 200px; resize: none;"></textarea>
+
+							<label for="newTicketText">
+								Текст
+							</label>
+						</div> <!-- /form-floating -->
+					</div> <!-- /modal-body -->
+
+					<div class="modal-footer">
+						<button id="changeVariableList" onclick="createNewTicket()" type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" aria-label="Close">
+							Отправить
+						</button> <!-- /btn -->
+					</div> <!-- /modal-footer -->
+				</form>
+			</div> <!-- /modal-content -->
+		</div> <!-- /modal-dialog -->
+	</div> <!-- /modal -->
+
+	<script src="{% static '/js/support.js' %}?v=8"></script>
+
+{% endblock content %}

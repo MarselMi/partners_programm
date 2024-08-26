@@ -1,0 +1,457 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card mb-4">
+				<div class="card-body">
+					<form action="">
+						<div class="row">
+
+							<div class="col-12 col-sm-3 mb-3 mb-sm-0">
+
+								<label class="form-label">
+									Период
+								</label> <!-- /form-label -->
+
+								<div class="input-group">
+									<span class="input-group-text">С</span>
+									{% if req_data.start %}
+										<input class="form-control" type="text" name="start" value="{{ req_data.start }}" id="datepicker"/>
+									{% else %}
+										<input class="form-control" type="text" name="start" value="{{ start_seven }}" id="datepicker"/>
+									{% endif %}
+										<span class="input-group-text">По</span>
+									{% if req_data.end %}
+										<input class="form-control" type="text" name="end" value="{{ req_data.end }}" id="datepicker1"/>
+									{% else %}
+										<input class="form-control" type="text" name="end" value="{{ date_now }}" id="datepicker1"/>
+									{% endif %}
+								</div> <!-- /input-group -->
+							</div> <!-- /col -->
+
+							<div class="col-12 col-sm-3 mb-3">
+								<label for="StatFilterOffer" class="form-label">
+									Оффер
+								</label> <!-- /form-label -->
+
+								<input id="StatFilterOffer" onfocus="this.value=''" onchange="this.blur();" name="offer_id" class="form-control filter_elements" autocomplete="off" placeholder="Выберите оффер" list="datalistOffers"
+								{% if data_filter.offer_id %} value="{{ data_filter.offer_id }}" {% endif %}>
+								<datalist id="datalistOffers" class="offer_id">
+									{% for offer in request.session.offers_list %} 
+									<option value="{{offer.name}}"></option>
+									{% endfor %}
+								</datalist>
+							</div> <!-- /col -->
+
+							<div class="col-12 col-sm-3">
+								<label class="form-label">&nbsp;</label>
+								<div class="">
+									<button type="submit" class="btn btn-primary">
+										Показать
+									</button>
+								</div>
+							</div>
+
+						</div> <!-- /row -->
+
+					</form>
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!--/row-->
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card mb-4">
+				<div class="card-body">
+
+					<div class="table-responsive table-maxh-stats">
+						<input hidden id="serv_order" value="{{order}}"/>
+						<input hidden id="serv_direction" value="{{direction}}"/>
+						<table class="table table-bordered text-nowrap mb-0">
+							<thead>
+								<tr>
+									<th>Поток</th>
+									<th>Оффер</th>
+									<th> <a type="button" style="text-decoration: none; color: inherit;" class="order_by" id="hosts" data-order="hosts">Хосты</th>
+									<th> <a type="button" style="text-decoration: none; color: inherit;" class="order_by" id="registrations" data-order="registrations">Регистрации</th>
+									<th>Конверт: хост/рег</th>
+									<th> <a type="button" style="text-decoration: none; color: inherit;" class="order_by" id="activations" data-order="activations">Активации</th>
+									<th>Конверт: рег/акт</th>
+									<th> <a type="button" style="text-decoration: none; color: inherit;" class="order_by" id="subscribes" data-order="subscribes">Подписки</th>
+									<th> <a type="button" style="text-decoration: none; color: inherit;" class="order_by" id="rebills" data-order="rebills">Ребиллы</th>
+									<th> <a type="button" style="text-decoration: none; color: inherit;" class="order_by" id="bad_rebills" data-order="bad_rebills">Неусп. ребиллы</th>
+									<th> <a type="button" style="text-decoration: none; color: inherit;" class="order_by" id="unsubscribes" data-order="unsubscribes">Отписки</th>
+									<th> <a type="button" style="text-decoration: none; color: inherit;" class="order_by" id="profit" data-order="profit">Приход</th>
+								</tr>
+							</thead>
+							<tbody id="ajax_table">
+								{% for stream in stream_stat %}
+								<tr>
+									<td>{{ stream.name }}</td>
+									<td>{{ stream.offer|offer_not_id }}</td>
+									<td>{{ stream.hosts|simple_numbers }}</td>
+									<td>{{ stream.registrations|simple_numbers }}</td>
+									<td>
+										{% if stream.registrations == 0 or stream.registrations == '0' %}
+											0:{{ stream.convert_host_reg }}
+										{% else %}
+											1:{{ stream.convert_host_reg }}
+										{% endif %}
+									</td>
+									<td>{{ stream.activations|simple_numbers }}</td>
+									<td>
+										{% if stream.activations == 0 or stream.activations == '0' %}
+											0:{{ stream.convert_reg_act }}
+										{% else %}
+											1:{{ stream.convert_reg_act }}
+										{% endif %}
+									</td>
+									<td>{{ stream.subscribes|simple_numbers }}</td>
+									<td>{{ stream.rebills|simple_numbers }}</td>
+									<td>{{ stream.bad_rebills|simple_numbers }}</td>
+									<td>{{ stream.unsubscribes|simple_numbers }}</td>
+									<td>{{ stream.profit|numb_format }}</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+							<tfoot>
+							<tr id="new_footer_table">
+								<th>Всего</th>
+								<th></th>
+								<th>{{sum_stat.sum_hosts|simple_numbers}}</th>
+								<th>{{sum_stat.sum_registrations|simple_numbers}}</th>
+								<th>
+									{% if sum_stat.sum_registrations == 0 %}
+										0:{{sum_stat.sum_convert_host_reg}}
+									{% else %}
+										1:{{sum_stat.sum_convert_host_reg}}
+									{% endif %}
+								</th>
+								<th>{{sum_stat.sum_activations|simple_numbers}}</th>
+								<th>
+									{% if sum_stat.sum_activations == 0 %}
+										0:{{sum_stat.sum_convert_reg_act}}
+									{% else %}
+										1:{{sum_stat.sum_convert_reg_act}}
+									{% endif %}
+								</th>
+								<th>{{sum_stat.sum_subscribes|simple_numbers}}</th>
+								<th>{{sum_stat.sum_rebills|simple_numbers}}</th>
+								<th>{{sum_stat.sum_bad_rebills|simple_numbers}}</th>
+								<th>{{sum_stat.sum_unsubscribes|simple_numbers}}</th>
+								<th>{{sum_stat.sum_profit|numb_format}}</th>
+							</tr>
+							</tfoot>
+						</table>
+					</div>
+
+					{% include 'pagin_menu.html' %}
+
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!-- /row -->
+
+
+	<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+
+	<script>
+
+
+		var url = document.location.href;
+		var a = document.cookie.split(';');
+		var token = '';
+
+		for (i = 0; i < a.length; i++) {
+			var b = a[i].split('=');
+			b[0] = b[0].replace(/\s+/g, '');
+			if (b[0] == 'csrftoken') {
+				token = b[1];
+			}
+		};
+
+		function numberWithSpaces(x) {
+			if(x){
+				return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+			}else{
+				return 0;
+			}
+		};
+
+		var down_direction = '<i id="order" onclick="selector_change(event);" style="padding-left: 5%;" class="fa-regular fa-arrow-down-wide-short"></i>';
+		var up_direction = '<i id="order" onclick="selector_change(event);" style="padding-left: 5%;" class="fa-regular fa-arrow-up-wide-short"></i>';
+
+		// Конверт
+		function create_convert(obj1, obj2){
+			if (obj2 == 0 || obj2 == '0'){
+				var conv = `0:${obj1}`;
+			}else{
+				var conv = `1:${Math.round(obj1/obj2)}`;
+			}
+			return conv;
+		};
+		// Наполняет тело таблицы
+		function create_lines(obj){
+
+			var hosts_reg_conv = create_convert(obj.hosts, obj.registrations);
+			var reg_act_conv = create_convert(obj.registrations, obj.activations);
+
+			var line = `<tr>
+				<td>${obj.name}</td>
+				<td>${obj.offer.substr(2)}</td>
+				<td>${numberWithSpaces(obj.hosts)}</td>
+				<td>${numberWithSpaces(obj.registrations)}</td>
+				<td>${hosts_reg_conv}</td>
+				<td>${numberWithSpaces(obj.activations)}</td>
+				<td>${reg_act_conv}</td>
+				<td>${numberWithSpaces(obj.subscribes)}</td>
+				<td>${numberWithSpaces(obj.rebills)}</td>
+				<td>${numberWithSpaces(obj.bad_rebills)}</td>
+				<td>${numberWithSpaces(obj.unsubscribes)}</td>
+				<td>${numberWithSpaces(obj.profit)}</td>
+				</tr>`;
+			return line;
+		};
+
+		function selector_change(event){
+			if(event.currentTarget.classList.contains('fa-arrow-down-wide-short')){
+				event.currentTarget.classList.remove('fa-arrow-down-wide-short');
+				event.currentTarget.classList.add('fa-arrow-up-wide-short');
+				$('#serv_direction').val(1);
+				$.ajax({
+					url: url,
+					method: 'POST',
+					data: {
+						csrfmiddlewaretoken: token,
+						type: 'direction_order',
+						direction_by: 1
+					}
+				}).then(function(result){
+					$('#ajax_table').empty();
+					var sum_hosts = 0
+					var	sum_registrations = 0
+					var	sum_activation = 0
+					var	sum_subscribes = 0
+					var	sum_rebills = 0
+					var	sum_bad_rebills = 0
+					var	sum_unsubscribes = 0
+					var	sum_profit = 0
+					for (let i = 0; result.res.length > i; i++){
+						$('#ajax_table').append(create_lines(result.res[i]));
+						sum_hosts += Number(result.res[i].hosts)
+						sum_registrations += Number(result.res[i].registrations)
+						sum_activation += Number(result.res[i].activations)
+						sum_subscribes += Number(result.res[i].subscribes)
+						sum_rebills += Number(result.res[i].rebills)
+						sum_bad_rebills += Number(result.res[i].bad_rebills)
+						sum_unsubscribes += Number(result.res[i].unsubscribes)
+						sum_profit += Number(result.res[i].profit)
+					}
+					$('#new_footer_table').empty();
+					var conv_host_reg = create_convert(sum_hosts, sum_registrations);
+					var conv_reg_act = create_convert(sum_registrations, sum_activation);
+					$('#new_footer_table').append(`
+						<th>Всего</th>
+						<th></th>
+						<th>${numberWithSpaces(sum_hosts)}</th>
+						<th>${numberWithSpaces(sum_registrations)}</th>
+						<th>${conv_host_reg}</th>
+						<th>${numberWithSpaces(sum_activation)}</th>
+						<th>${conv_reg_act}</th>
+						<th>${numberWithSpaces(sum_subscribes)}</th>
+						<th>${numberWithSpaces(sum_rebills)}</th>
+						<th>${numberWithSpaces(sum_bad_rebills)}</th>
+						<th>${numberWithSpaces(sum_unsubscribes)}</th>
+						<th>${numberWithSpaces(sum_profit)}</th>
+					`);
+				}).catch(function(err){
+					var x = 0;
+				})
+			}else{
+				event.currentTarget.classList.remove('fa-arrow-up-wide-short');
+				event.currentTarget.classList.add('fa-arrow-down-wide-short');
+				$('#serv_direction').val(0);
+				$.ajax({
+					url: url,
+					method: 'POST',
+					data: {
+						csrfmiddlewaretoken: token,
+						type: 'direction_order',
+						direction_by: 0
+					}
+				}).then(function(result){
+					$('#ajax_table').empty();
+					var sum_hosts = 0
+					var	sum_registrations = 0
+					var	sum_activation = 0
+					var	sum_subscribes = 0
+					var	sum_rebills = 0
+					var	sum_bad_rebills = 0
+					var	sum_unsubscribes = 0
+					var	sum_profit = 0
+					for (let i = 0; result.res.length > i; i++){
+						sum_hosts += Number(result.res[i].hosts)
+						sum_registrations += Number(result.res[i].registrations)
+						sum_activation += Number(result.res[i].activations)
+						sum_subscribes += Number(result.res[i].subscribes)
+						sum_rebills += Number(result.res[i].rebills)
+						sum_bad_rebills += Number(result.res[i].bad_rebills)
+						sum_unsubscribes += Number(result.res[i].unsubscribes)
+						sum_profit += Number(result.res[i].profit)
+						$('#ajax_table').append(create_lines(result.res[i]));
+					}
+					$('#new_footer_table').empty();
+					var conv_host_reg = create_convert(sum_hosts, sum_registrations);
+					var conv_reg_act = create_convert(sum_registrations, sum_activation);
+					$('#new_footer_table').append(`
+					<th>Всего</th>
+						<th></th>
+						<th>${numberWithSpaces(sum_hosts)}</th>
+						<th>${numberWithSpaces(sum_registrations)}</th>
+						<th>${conv_host_reg}</th>
+						<th>${numberWithSpaces(sum_activation)}</th>
+						<th>${conv_reg_act}</th>
+						<th>${numberWithSpaces(sum_subscribes)}</th>
+						<th>${numberWithSpaces(sum_rebills)}</th>
+						<th>${numberWithSpaces(sum_bad_rebills)}</th>
+						<th>${numberWithSpaces(sum_unsubscribes)}</th>
+						<th>${numberWithSpaces(sum_profit)}</th>
+					`);
+				}).catch(function(err){
+					var x = 0;
+				})
+			}
+		};
+
+		$('.order_by').on({
+			click: function() {
+				if(!$(this).find('#order').length){
+					$('#order').remove();
+					$('#serv_order').val($(this).attr('data-order'));
+					if($('#serv_direction').val() == '0' || $('#serv_direction').val() == 0){
+						$(this).append(`${down_direction}`);
+					}else{
+						$(this).append(`${up_direction}`);
+					};
+					// отправка на серв нового элемента по которому будет сортировка
+					$.ajax({
+						url: url,
+						method: 'POST',
+						data: {
+							csrfmiddlewaretoken: token,
+							type: 'change_order',
+							order_by: $(this).attr('data-order')
+						}
+					}).then(function(result){
+						$('#ajax_table').empty();
+						var sum_hosts = 0
+						var	sum_registrations = 0
+						var	sum_activation = 0
+						var	sum_subscribes = 0
+						var	sum_rebills = 0
+						var	sum_bad_rebills = 0
+						var	sum_unsubscribes = 0
+						var	sum_profit = 0
+						for (let i = 0; result.res.length > i; i++){
+							sum_hosts += Number(result.res[i].hosts)
+							sum_registrations += Number(result.res[i].registrations)
+							sum_activation += Number(result.res[i].activations)
+							sum_subscribes += Number(result.res[i].subscribes)
+							sum_rebills += Number(result.res[i].rebills)
+							sum_bad_rebills += Number(result.res[i].bad_rebills)
+							sum_unsubscribes += Number(result.res[i].unsubscribes)
+							sum_profit += Number(result.res[i].profit)
+							$('#ajax_table').append(create_lines(result.res[i]));
+						}
+						$('#new_footer_table').empty();
+						var conv_host_reg = create_convert(sum_hosts, sum_registrations);
+						var conv_reg_act = create_convert(sum_registrations, sum_activation);
+						$('#new_footer_table').append(`
+							<th>Всего</th>
+							<th></th>
+							<th>${numberWithSpaces(sum_hosts)}</th>
+							<th>${numberWithSpaces(sum_registrations)}</th>
+							<th>${conv_host_reg}</th>
+							<th>${numberWithSpaces(sum_activation)}</th>
+							<th>${conv_reg_act}</th>
+							<th>${numberWithSpaces(sum_subscribes)}</th>
+							<th>${numberWithSpaces(sum_rebills)}</th>
+							<th>${numberWithSpaces(sum_bad_rebills)}</th>
+							<th>${numberWithSpaces(sum_unsubscribes)}</th>
+							<th>${numberWithSpaces(sum_profit)}</th>
+						`);
+					}).catch(function(err){
+						var x = 0;
+					})
+				}
+			}
+		});
+
+		// Функция для определения по какому параметру установлена сортировка и порядок сортировки 
+		// после загрузки страницы
+		$('.order_by').each((ind, elem) => {
+			if(elem.getAttribute('data-order') == $('#serv_order').val()){
+				if($('#serv_direction').val() == 0 || $('#serv_direction').val() == '0'){
+					var item_stand_directon = `${elem.textContent} ${down_direction}`;
+				}else{
+					var item_stand_directon = `${elem.textContent} ${up_direction}`;
+				};
+				$(`#${elem.getAttribute('data-order')}`).empty();
+				$(`#${elem.getAttribute('data-order')}`).append(item_stand_directon);
+			}
+		});
+
+		var btnLimEl = document.querySelectorAll('.checkLimitButton');
+		for (let i = 0; i < btnLimEl.length; i++){
+			btnLimEl[i].addEventListener('click', function(event) {
+				if (event.target == btnLimEl[i]){
+					$.ajax({
+						url: url,
+						method: 'POST',
+						data: {
+							csrfmiddlewaretoken: token,
+							type: 'page_limit',
+							limit: btnLimEl[i].getAttribute("name")
+						}
+					}).then(function(result) {
+						var x = document.location.search.split('&page')[0];
+					    x = x.split('?page')[0];
+					    document.location.href = document.location.origin + document.location.pathname + x;
+					}).catch(function(err) {
+						var x = 1;
+					})
+				}
+			})
+		};
+
+		var dirtly_url = new URL(location);
+		var dirtly_params = dirtly_url.searchParams;
+		var new_params = '?';
+
+		dirtly_params.forEach((val, key) =>{
+			if (val){
+				new_params += key+'='+val+'&'
+			}
+		})
+
+		new_params = new_params.slice(0, -1);
+
+		var new_url = new URL(new_params, location);
+		
+		if(new_params){
+			history.pushState(null, null, new_url);
+		}
+
+	</script>
+
+	<script type="text/javascript">
+		$(function(){
+			$("#datepicker").datepicker({maxDate: '0'});
+			$("#datepicker1").datepicker({maxDate: '0'});
+		});
+	</script>
+
+{% endblock content %}

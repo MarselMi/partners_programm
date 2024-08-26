@@ -1,0 +1,1527 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row mb-4">
+		<div class="col-12">
+			<div class="card custom-card">
+				<div class="card-body">
+					<div class="prof-details text-center">
+						<div class="row">
+
+							<!-- <div class="col-sm row align-items-center">
+								<a class="img-fluid" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+									<img src="{% static 'img/contest/Banner.png' %}" class="card-img " alt="...">
+								</a>
+							</div> -->
+							
+							<div class="">
+	
+								<h4 class="fw-bold text-bg-outline-secondary d-inline-block rounded-pill mt-3 mb-4 py-3 px-4 col">
+									<i class="fa-regular fa-star text-warning small me-2"></i>
+									<i class="fa-regular fa-star text-warning me-2"></i>
+		
+									<span class="text-black">
+										{{ request.session.user }}
+									</span>
+		
+									<i class="fa-regular fa-star text-warning ms-2"></i>
+									<i class="fa-regular fa-star text-warning small ms-2"></i>
+								</h4> <!-- /user-name -->
+								
+							</div>
+
+							<div class="col-sm">
+
+							</div>
+		
+						</div>
+						
+		
+						<div class="mt-2 justify-content-center">
+							<div class="col-auto text-muted mb-3">
+								<span class="fw-bold me-2">
+									Регистрация:
+								</span>
+
+								<span>
+									{{ profile_info.create_date|date_change }}
+								</span>
+							</div> <!-- /col -->
+						</div> <!-- /row -->
+
+					</div> <!-- /prof-details -->
+				</div> <!-- /card-body -->
+
+				<input id="opened_tab" name="opened_tab" value="{{ open }}" hidden>
+				<div class="card-footer bg-transparent border-top">
+					<div class="profile-tab">
+						<nav class="nav nav-pills justify-content-center">
+
+							{% if open == 'contacts_edit' %}
+							<a class="nav-link active" data-bs-toggle="tab" href="#contacts_edit">
+								Редактирование профиля
+							</a>
+							{% else %}
+							<a class="nav-link" data-bs-toggle="tab" href="#contacts_edit">
+								Редактирование профиля
+							</a>
+							{% endif %}
+
+							{% if open == 'payment_details' %}
+							<a class="nav-link active" data-bs-toggle="tab" href="#payment-details">
+								Реквизиты
+							</a>
+							{% else %}
+							<a class="nav-link" data-bs-toggle="tab" href="#payment-details">
+								Реквизиты
+							{% endif %}
+
+							<a class="nav-link" data-bs-toggle="tab" href="#referrals">
+								Рефералы
+							</a>
+
+							{% if open == 'password' %}
+							<a class="nav-link active" data-bs-toggle="tab" href="#settings">
+								Безопасность
+							</a>
+							{% else %}
+							<a class="nav-link" data-bs-toggle="tab" href="#settings">
+								Безопасность
+							</a>
+							{% endif %}
+
+						</nav> <!-- /nav -->
+					</div> <!-- /profile-tab -->
+				</div> <!-- /card-footer -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!-- /row -->
+
+	<div class="row mb-4 allTable">
+		<div class="col-lg-12 col-md-12">
+			<div class="tab-content">
+
+						{% if open == 'contacts_edit' %}
+						<div class="tab-pane active" id="contacts_edit">
+						{% else %}
+						<div class="tab-pane" id="contacts_edit">
+						{% endif %}
+
+							<div class="card">
+								<div class="card-body">
+									<div class="contacts_edit">
+
+										<div class="h5 fw-bold mb-4">
+											Контактная информация
+										</div> <!-- /title -->
+
+										<div class="row mb-3">
+											<div class="col-md-3">
+												<label class="form-label">
+													Email <i>(логин) — изменить нельзя</i>
+												</label>
+											</div> <!-- /col -->
+
+											<div class="col-md-9">
+												<input type="email" class="form-control" placeholder="Email" value="{{ request.session.user }}" disabled="">
+											</div> <!-- /col -->
+										</div> <!-- /row -->
+
+
+										<div class="row mb-3">
+											<div class="col-lg-3">
+												<label class="form-label">
+													Telegram
+												</label>
+											</div> <!-- /col -->
+
+											<div class="col-12 col-lg-9">
+												<div class="input-group">
+													<input id="tlf_for_change_pwd" value="{{profile_info.telegram_id}}" hidden>
+													{% if profile_info.telegram_id %}
+													<span class="input-group-text">
+														<i class="fa-regular fa-circle-check text-success" data-bs-toggle="tooltip" data-bs-title="Telegram привязан"></i>
+													</span>
+													<input type="text" class="form-control" name="telegram" placeholder="Telegram" value="{{ profile_info.telegram }}" readonly>
+
+													<a class="btn btn-success text-white" id="change_tlg_id">
+														Привязать новый
+													</a>
+													{% else %}
+													<span class="input-group-text">
+														<i class="fa-regular fa-circle-info text-danger" data-bs-toggle="tooltip" data-bs-title="Привяжите Telegram"></i>
+													</span>
+
+													<input type="text" class="form-control" name="telegram" placeholder="Нажмите 'Привязать' для подтверждения Telegram" readonly>
+
+													<a class="btn btn-primary text-white d-none d-lg-block" type="button" id="button-addon1" href="tg://resolve?domain=offeringpartnersbot&start=st-{{ md5_hash }}-{{ profile_info.id }}-{{time_for_h}}">
+														Привязать
+													</a>
+													{% endif %}
+												</div> <!-- /input-group -->
+											</div> <!-- /col -->
+											{% if profile_info.telegram_id %}
+											{% else %}
+											<div class="d-block d-lg-none">
+												<div class="mt-3 mt-lg-0 d-grid">
+													<a class="btn btn-primary" href="tg://resolve?domain=offeringpartnersbot&start=st-{{ md5_hash }}-{{ profile_info.id }}-{{time_for_h}}">
+														Привязать
+													</a>
+												</div>
+											</div> <!-- /col -->
+											{% endif %}
+										</div> <!-- /row -->
+
+										{% if profile_info.telegram_id %}
+										<div class="row mb-3">
+											<div class="col-lg-3">
+												<label class="form-label">
+													Двухфакторная аутентификация
+												</label>
+											</div> <!-- /col -->
+											<div class="col-md-9">
+												<div class="mt-3 mt-lg-0 d-grid two_factor_auth">
+													<label class="switch">
+														<input id="two_fack_auth_choice" type="checkbox"{% if profile_info.two_factor_auth == 1 %} checked{% endif %}>
+														<span class="slider round"></span>
+													</label>
+													
+												</div>
+											</div> <!-- /col -->
+										</div> <!-- /row -->
+										{% endif %}	
+
+										<div class="row mb-3">
+											<div class="col-md-3">
+												<label class="form-label">
+													Телефон
+												</label>
+											</div> <!-- /col -->
+
+											<div class="col-md-9">
+												{% if profile_info.phone %}
+												<input type="text" class="form-control" id="telephone_number" name="phone" placeholder="Номер телефона" value="{{ profile_info.phone }}">
+												{% else %}
+												<input type="text" class="form-control" id="telephone_number" name="phone" placeholder="Номер телефона" value="">
+												{% endif %}
+											</div> <!-- /col -->
+										</div> <!-- /row -->
+
+
+										<div class="row mb-3">
+											<div class="col-md-3">
+												<label class="form-label">
+													Ник для ТОПа
+												</label>
+											</div> <!-- /col -->
+
+											<div class="col-md-9">
+												{% if profile_info.contest_nick %}
+													<input type="text" class="form-control" id="nick_top" name="top_nickname" placeholder="Ник для ТОПа" value="{{ profile_info.contest_nick }}">
+												{% else %}
+													<input type="text" class="form-control" id="nick_top" name="top_nickname" placeholder="Ник для ТОПа" value="WebMaster Hero">
+												{% endif %}
+											</div> <!-- /col -->
+										</div> <!-- /row -->
+
+
+
+										<div class="h5 fw-bold mb-4" hidden>
+											Настройки почты
+										</div> <!-- /title -->
+
+										<div class="row mb-3" hidden>
+											<div class="col-md-3">
+
+												{% if profile_info.email_verified %}
+												<div class="alert alert-success mb-0" role="alert">
+													Почта подтверждена
+												</div> <!-- /alert -->
+												{% else %}
+												<div class="alert alert-warning mb-0" role="alert">
+													<a class="alert-link" href="javascript:void(0)">Подтвердите</a> почту
+												</div> <!-- /alert -->
+												{% endif %}
+											</div> <!-- /col -->
+
+											<div class="col-md-9">
+												<div class="form-check mb-3">
+													{% if profile_info.want_to_get_notifications == True %}
+													<input class="form-check-input" name="checkNews" id="checkGetNews" value="{{ profile_info.want_to_get_notifications }}" type="checkbox" checked>
+													{% else %}
+													<input class="form-check-input" name="checkNews" id="checkGetNews" value="{{ profile_info.want_to_get_notifications }}" type="checkbox">
+													{% endif %}
+													<label class="form-check-label" for="checkGetNews">
+														Хочу получать уведомления и новости на почту
+													</label>
+												</div> <!-- /form-check -->
+
+												<div class="form-check">
+													<input class="form-check-input" id="checkGetImpNews" checked="" type="checkbox" disabled="">
+
+													<label class="form-check-label" for="checkGetImpNews">
+														Получать важные новости (отказаться нельзя)
+													</label>
+												</div> <!-- /form-check -->
+											</div> <!-- /col -->
+										</div> <!-- /row -->
+
+										<div class="text-center mb-2">
+											<button name="contacts_edit" id="contacts_edit_save" class="btn btn-primary">
+												Сохранить
+											</button> <!-- /btn -->
+										</div> <!-- /btn-container -->
+									</div> <!-- /form -->
+								</div> <!-- /card-body -->
+							</div> <!-- /card -->
+						</div> <!-- /edit -->
+
+
+						{% if open == 'payment_details' %}
+						<div class="tab-pane active" id="payment-details">
+						{% else %}
+						<div class="tab-pane" id="payment-details">
+						{% endif %}
+							<div class="card">
+								<div class="card-body">
+									<form class="payTwoFack" id="for_mess_payment_details" method="POST" name="payment-details" action="#payment-details" enctype="multipart/form-data">
+										{% csrf_token %}
+										<input id="two_factor_auth" value="{{ two_factor_auth }}" hidden>
+										<div class="h5 fw-bold mb-4">
+											Добавление реквизитов
+										</div> <!-- /title -->
+
+										<div class="accordion accordion-flush" id="payment-accordion">
+											<div class="accordion-item">
+												<h2 class="accordion-header" id="payment-accordion-head-1">
+													<button id="capitalist_button" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment-accordion-1" aria-expanded="false" aria-controls="payment-accordion-1">
+														Счёт Capitalist
+
+														{% if req_partner.capitalist %}
+															<i class="fa-regular fa-file-check ms-3 text-success"></i>
+														{% else %}
+														{% endif %}
+													</button> <!-- /accordion-button -->
+												</h2> <!-- /accordion-header -->
+												<div id="payment-accordion-1" class="accordion-collapse collapse" aria-labelledby="payment-accordion-head-1" data-bs-parent="#payment-accordion">
+													<div class="accordion-body">
+														
+														<input id="capitalist_req" name="capitalist" type="text" data-button="capitalist_button" class="form-control" 
+														{% if req_partner.capitalist %} value="{{ req_partner.capitalist }}" disabled {% else %} placeholder="R12345678" value="" {% endif %}/>
+
+													</div> <!-- /accordion-body -->
+												</div> <!-- /accordion-collapse -->
+											</div> <!-- /accordion-item -->
+
+
+											<div class="accordion-item">
+												<h2 class="accordion-header" id="payment-accordion-head-2">
+													<button id="webmoney_button" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment-accordion-2" aria-expanded="false" aria-controls="payment-accordion-2">
+														WebMoney
+														{% if req_partner.webmoney %}
+														<i class="fa-regular fa-file-check ms-3 text-success"></i>
+														{% else %}
+														{% endif %}
+													</button> <!-- /accordion-button -->
+												</h2> <!-- /accordion-header -->
+												<div id="payment-accordion-2" class="accordion-collapse collapse" aria-labelledby="payment-accordion-head-2" data-bs-parent="#payment-accordion">
+													<div class="accordion-body">
+
+														<input id="webmoney" name="webmoney" type="text" data-button="webmoney_button" class="form-control" placeholder="Z123456789012" 
+														{% if req_partner.webmoney %} value="{{ req_partner.webmoney }}" disabled {% else %} value="" {% endif %}>
+
+													</div> <!-- /accordion-body -->
+												</div> <!-- /accordion-collapse -->
+											</div> <!-- /accordion-item -->
+														
+
+											<div class="accordion-item">
+												<h2 class="accordion-header" id="payment-accordion-head-3">
+													<button id="qiwi_button" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment-accordion-3" aria-expanded="false" aria-controls="payment-accordion-3">
+														Qiwi
+														{% if req_partner.qiwi %}
+														<i class="fa-regular fa-file-check ms-3 text-success"></i>
+														{% else %} 
+														{% endif %} 
+													</button> <!-- /accordion-button -->
+												</h2> <!-- /accordion-header -->
+
+												<div id="payment-accordion-3" class="accordion-collapse collapse" aria-labelledby="payment-accordion-head-3" data-bs-parent="#payment-accordion">
+													<div class="accordion-body">
+														<input id="qiwi" name="qiwi" type="text" data-button="qiwi_button" class="form-control" placeholder="79210001122" 
+														{% if req_partner.qiwi %} value="{{ req_partner.qiwi }}" disabled {% else %} value="" {% endif %} >
+													</div> <!-- /accordion-body -->
+												</div> <!-- /accordion-collapse -->
+											</div> <!-- /accordion-item -->
+
+											<div class="accordion-item">
+												<h2 class="accordion-header" id="payment-accordion-head-4">
+													<button id="umoney_button" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment-accordion-4" aria-expanded="false" aria-controls="payment-accordion-4">
+														Umoney
+														{% if req_partner.umoney %}
+														<i class="fa-regular fa-file-check ms-3 text-success"></i>
+														{% else %}
+														{% endif %}
+													</button> <!-- /accordion-button -->
+												</h2> <!-- /accordion-header -->
+
+												<div id="payment-accordion-4" class="accordion-collapse collapse" aria-labelledby="payment-accordion-head-4" data-bs-parent="#payment-accordion">
+													<div class="accordion-body">
+														<input id="umoney" name="umoney" type="text" data-button="umoney_button" class="form-control" placeholder="1234 1234 1234 123"
+														{% if req_partner.umoney %} value="{{ req_partner.umoney }}" disabled {% else %} value="" {% endif %}>
+													</div> <!-- /accordion-body -->
+												</div> <!-- /accordion-collapse -->
+											</div> <!-- /accordion-item -->
+
+
+											<div class="accordion-item">
+												<h2 class="accordion-header" id="payment-accordion-head-5">
+													<button id="rucard_card_data_button" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment-accordion-5" aria-expanded="false" aria-controls="payment-accordion-5">
+														Карта РФ, RUR
+														{% if req_partner.data %}
+														<i class="fa-regular fa-file-check ms-3 text-success"></i>
+														{% else %} 
+														{% endif %} 
+													</button> <!-- /accordion-button -->
+												</h2> <!-- /accordion-header -->
+
+												<div id="payment-accordion-5" class="accordion-collapse collapse" aria-labelledby="payment-accordion-head-5" data-bs-parent="#payment-accordion">
+													<div class="accordion-body">
+														<div class="mb-3">
+															<input id="rucard_card_data" name="rucard_card_data" data-button="rucard_card_data_button" type="text" class="form-control" placeholder="0000 0000 0000 0000"  
+															{% if req_partner.data %} value="{{ req_partner.data|card_numb }}" disabled {% else %} value="" {% endif %}>
+														</div>
+														{% if req_partner.data %}
+														{% else %} 
+														<div id="rucard_info_message" class="alert alert-info small mb-3" style="display: block;">
+															Все данные ниже заполняются на латинице!
+														</div>
+														{% endif %} 
+
+														<div class="row">
+															<div class="col-12 col-md-6 mb-3">
+																<input id="rucard_firstname" name="rucard_firstname" type="text" class="form-control" placeholder="Имя на карте"
+																{% if req_partner.name_data %} value="{{ req_partner.name_data }}" disabled {% else %} value="" {% endif %}>
+															</div>
+
+															<div class="col-12 col-md-6 mb-3">
+																<input id="rucard_lastname" name="rucard_lastname" type="text" class="form-control" placeholder="Фамилия на карте"
+																{% if req_partner.surname_data %} value="{{ req_partner.surname_data }}" disabled {% else %} value=""{% endif %}>
+															</div>
+														</div>
+													</div> <!-- /accordion-body -->
+												</div> <!-- /accordion-collapse -->
+											</div> <!-- /accordion-item -->
+
+
+											<div class="accordion-item">
+												<h2 class="accordion-header" id="payment-accordion-head-6">
+													<button id="data_card_to_card_button" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment-accordion-6" aria-expanded="false" aria-controls="payment-accordion-6">
+														Карта P2P
+
+														{% if req_partner.data_card_to_card %}
+															<i class="fa-regular fa-file-check ms-3 text-success"></i>
+														{% else %} 
+														{% endif %} 
+
+													</button> <!-- /accordion-button -->
+												</h2> <!-- /accordion-header -->
+
+												<div id="payment-accordion-6" class="accordion-collapse collapse" aria-labelledby="payment-accordion-head-6" data-bs-parent="#payment-accordion">
+													<div class="accordion-body">
+														<input id="data_card_to_card" name="data_card_to_card" data-button="data_card_to_card_button" type="text" class="form-control" placeholder="0000 0000 0000 0000"
+														{% if req_partner.data_card_to_card %} value="{{ req_partner.data_card_to_card|card_numb }}" disabled {% else %} value="" {% endif %}>
+													</div> <!-- /accordion-body -->
+												</div> <!-- /accordion-collapse -->
+											</div> <!-- /accordion-item -->
+
+											<div class="accordion-item">
+												<h2 class="accordion-header" id="payment-accordion-head-7">
+													<button id="data_mastercard_worldwide_button" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment-accordion-7" aria-expanded="false" aria-controls="payment-accordion-7">
+														Карта Mastercard Worldwide, EUR
+
+														{% if req_partner.data_mastercard_worldwide %}
+															<i class="fa-regular fa-file-check ms-3 text-success"></i>
+														{% else %} 
+														{% endif %} 
+
+													</button> <!-- /accordion-button -->
+												</h2> <!-- /accordion-header -->
+
+												<div id="payment-accordion-7" class="accordion-collapse collapse" aria-labelledby="payment-accordion-head-7" data-bs-parent="#payment-accordion">
+													<div class="accordion-body">
+														<div class="mb-3">
+															<input id="data_mastercard_worldwide" data-button="data_mastercard_worldwide_button" name="data_mastercard_worldwide" type="text" class="form-control"
+															{% if req_partner.data_mastercard_worldwide %} value="{{ req_partner.data_mastercard_worldwide|card_numb }}" disabled {% else %} placeholder="0000 0000 0000 0000" value="" {% endif %}>
+														</div>
+
+														{% if req_partner.data_mastercard_worldwide %}
+														{% else %} 
+															<div id="mc_info_message" class="alert alert-info small mb-3" style="display: block;">
+																Все данные ниже заполняются на латинице!
+															</div>
+														{% endif %} 
+
+														<div class="row">
+															{% if req_partner.data_mastercard_worldwide %}
+
+																<div class="col-12 col-md-2 mb-3">
+																	<input id="month_mc" name="month_mc" type="text" class="form-control" value="{{ req_partner.month_mc }}" disabled>
+																</div>
+
+																<div class="col-12 col-md-2 mb-3">
+																	<input id="year_mc" name="year_mc" type="text" class="form-control" value="{{ req_partner.year_mc }}" disabled>
+																</div>
+
+																<div class="col-12 col-md-3 mb-3">
+																	<input id="name_mc" name="name_mc" type="text" class="form-control" value="{{ req_partner.name_mc }}" disabled>
+																</div>
+
+																<div class="col-12 col-md-3 mb-3">
+																	<input id="surname_mc" name="surname_mc" type="text" class="form-control" value="{{ req_partner.surname_mc }}" disabled>
+																</div>
+
+																<div class="col-12 col-md-2 mb-3">
+																	<input id="birth_date_mc" name="birth_date_mc" type="text" class="form-control" value="{{ req_partner.birth_date_mc }}" disabled>
+																</div>
+
+																<div class="col-12 col-md-3 mb-3">
+																	<input id="country_code_mc" name="country_code_mc" type="text" class="form-control" value="{{ req_partner.country_code_mc }}" disabled>
+																</div>
+
+																<div class="col-12 col-md-3 mb-3">
+																	<input id="city_mc" name="city_mc" type="text" class="form-control" value="{{ req_partner.city_mc }}" disabled>
+																</div>
+
+																<div class="col-12 col-md-6 mb-3">
+																	<input id="address_mc" name="address_mc" type="text" class="form-control" value="{{ req_partner.address_mc }}" disabled>
+																</div>
+
+															{% else %}
+
+																<div class="col-12 col-md-2 mb-3">
+																	<input id="month_mc" name="month_mc" type="text" class="form-control" placeholder="Месяц (ММ)" value="">
+																</div>
+
+																<div class="col-12 col-md-2 mb-3">
+																	<input id="year_mc" name="year_mc" type="text" class="form-control" placeholder="Год (ГГГГ)" value="">
+																</div>
+
+																<div class="col-12 col-md-3 mb-3">
+																	<input id="name_mc" name="name_mc" type="text" class="form-control" placeholder="Имя на карте" value="">
+																</div>
+
+																<div class="col-12 col-md-3 mb-3">
+																	<input id="surname_mc" name="surname_mc" type="text" class="form-control" placeholder="Фамилия на карте" value="">
+																</div>
+
+																<div class="col-12 col-md-2 mb-3">
+																	<input id="birth_date_mc" name="birth_date_mc" type="text" class="form-control" placeholder="Дата рождения (ГГГГ-ММ-ДД)" value="">
+																</div>
+
+																<div class="col-12 col-md-3 mb-3">
+																	<input id="country_code_mc" name="country_code_mc" type="text" class="form-control" placeholder="Код страны (СС)" value="">
+																</div>
+
+																<div class="col-12 col-md-3 mb-3">
+																	<input id="city_mc" name="city_mc" type="text" class="form-control" placeholder="Город" value="">
+																</div>
+
+																<div class="col-12 col-md-6 mb-3">
+																	<input id="address_mc" name="address_mc" type="text" class="form-control" placeholder="Адрес" value="">
+																</div>
+
+															{% endif %}
+														</div>
+													</div> <!-- /accordion-body -->
+												</div> <!-- /accordion-collapse -->
+											</div> <!-- /accordion-item -->
+
+											<!-- <div class="accordion-item">
+												<h2 class="accordion-header" id="payment-accordion-head-ua">
+													<button id="data_button_ua" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment-accordion-ua" aria-expanded="false" aria-controls="payment-accordion-ua">
+														Карта УКР, UA
+														{% if req_partner.data_ua %}
+														<i class="fa-regular fa-file-check ms-3 text-success"></i>
+														{% else %}
+														{% endif %}
+													</button> 
+												</h2> 
+
+												<div id="payment-accordion-ua" class="accordion-collapse collapse" aria-labelledby="payment-accordion-head-ua" data-bs-parent="#payment-accordion">
+													<div class="accordion-body">
+														<div class="mb-3">
+															<input id="data_ua" name="data_ua" data-button="data_button_ua" type="text" class="form-control" 
+															{% if req_partner.data_ua %} value="{{ req_partner.data_ua|card_numb }}" disabled {% else %} placeholder="0000 0000 0000 0000" value="" {% endif %}>
+														</div>
+														{% if req_partner.data_ua %}
+														{% else %}
+														<div id="ua_info_message" class="alert alert-info small mb-3" style="display: block;">
+															Все данные ниже заполняются на латинице!
+														</div>
+														{% endif %}
+														<div class="row">
+
+															<div class="col-12 col-md-6 mb-3">
+																<input id="ua_firstname" name="ua_firstname" type="text" class="form-control" 
+																{% if req_partner.data_ua %} value="{{ req_partner.name_data_ua }}" disabled {% else %} placeholder="Имя на карте" value="" {% endif %}>
+															</div>
+
+															<div class="col-12 col-md-6 mb-3">
+																<input id="ua_lastname" name="ua_lastname" type="text" class="form-control" 
+																{% if req_partner.data_ua %} value="{{ req_partner.surname_data_ua }}" disabled {% else %} placeholder="Фамилия на карте" value="" {% endif %}>
+															</div>
+
+														</div>
+													</div>
+												</div> 
+											</div> -->
+
+											<div class="accordion-item">
+												<h2 class="accordion-header" id="payment-accordion-head-kz">
+													<button id="data_button_kz" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment-accordion-kz" aria-expanded="false" aria-controls="payment-accordion-kz">
+														Карта КЗ, KZ
+														{% if req_partner.data_kz %}
+														<i class="fa-regular fa-file-check ms-3 text-success"></i>
+														{% else %}
+														{% endif %}
+													</button> <!-- /accordion-button -->
+												</h2> <!-- /accordion-header -->
+
+												<div id="payment-accordion-kz" class="accordion-collapse collapse" aria-labelledby="payment-accordion-head-kz" data-bs-parent="#payment-accordion">
+													<div class="accordion-body">
+														<div class="mb-3">
+															<input id="data_kz" name="data_kz" data-button="data_button_kz" type="text" class="form-control" placeholder="0000 0000 0000 0000"
+															{% if req_partner.data_kz %} value="{{ req_partner.data_kz }}" disabled {% else %} value=""{% endif %}>
+														</div>
+
+														{% if req_partner.data_kz %}
+														{% else %}
+														<div id="kz_info_message" class="alert alert-info small mb-3" style="display: block;">
+															Все данные ниже заполняются на латинице!
+														</div>
+														{% endif %}
+
+														<div class="row">
+
+															<div class="col-12 col-md-6 mb-3">
+																<input id="kz_firstname" name="kz_firstname" type="text" class="form-control" placeholder="Имя на карте"
+																{% if req_partner.data_kz %} value="{{ req_partner.name_data_kz }}" disabled {% else %} value=""{% endif %}>
+															</div>
+
+															<div class="col-12 col-md-6 mb-3">
+																<input id="kz_lastname" name="kz_lastname" type="text" class="form-control" placeholder="Фамилия на карте"
+																{% if req_partner.data_kz %} value="{{ req_partner.surname_data_kz }}" disabled {% else %} value=""{% endif %}>
+															</div>
+
+														</div>
+													</div> <!-- /accordion-body -->
+												</div> <!-- /accordion-collapse -->
+											</div> <!-- /accordion-item -->
+
+
+
+											<div class="accordion-item">
+												<h2 class="accordion-header" id="payment-accordion-head-8">
+													<button id="usdt_erc_20_button" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment-accordion-8" aria-expanded="false" aria-controls="payment-accordion-8">
+														USDT (Erc20)
+														{% if req_partner.usdt_erc_20 %}
+														<i class="fa-regular fa-file-check ms-3 text-success"></i>
+														{% else %} 
+														{% endif %} 
+													</button> <!-- /accordion-button -->
+												</h2> <!-- /accordion-header -->
+
+												<div id="payment-accordion-8" class="accordion-collapse collapse" aria-labelledby="payment-accordion-head-8" data-bs-parent="#payment-accordion">
+													<div class="accordion-body">
+														<input id="usdt_erc_20" name="usdt_erc_20" data-button="usdt_erc_20_button" type="text" class="form-control" placeholder="0x104ec3258cfc8345bcc5c2a0fc4633cd53117627"
+														{% if req_partner.usdt_erc_20 %} value="{{ req_partner.usdt_erc_20 }}" disabled {% else %} value="" {% endif %}>
+													</div> <!-- /accordion-body -->
+												</div> <!-- /accordion-collapse -->
+											</div> <!-- /accordion-item -->
+
+											<div class="accordion-item">
+												<h2 class="accordion-header" id="payment-accordion-head-9">
+													<button id="usdt_trc_20_button" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment-accordion-9" aria-expanded="false" aria-controls="payment-accordion-9">
+														USDT (Trc20)
+														{% if req_partner.usdt_trc_20 %}
+														<i class="fa-regular fa-file-check ms-3 text-success"></i>
+														{% else %} 
+														{% endif %} 
+													</button> <!-- /accordion-button -->
+												</h2> <!-- /accordion-header -->
+
+												<div id="payment-accordion-9" class="accordion-collapse collapse" aria-labelledby="payment-accordion-head-9" data-bs-parent="#payment-accordion">
+													<div class="accordion-body">
+														<input id="usdt_trc_20" name="usdt_trc_20" data-button="usdt_trc_20_button" type="text" class="form-control" placeholder="TAhZwabfFsjJHUpP9q5p8i9jQMpk1p1E4f"
+														{% if req_partner.usdt_trc_20 %} value="{{ req_partner.usdt_trc_20 }}" disabled {% else %} value="" {% endif %}>
+													</div> <!-- /accordion-body -->
+												</div> <!-- /accordion-collapse -->
+											</div> <!-- /accordion-item -->
+
+											<div class="accordion-item">
+												<h2 class="accordion-header" id="payment-accordion-head-10">
+													<button id="ip_button" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment-accordion-10" aria-expanded="false" aria-controls="payment-accordion-10">
+														ИП РФ
+														{% if req_partner.ip_name %}
+														<i class="fa-regular fa-file-check ms-3 text-success"></i>
+														{% else %} 
+														{% endif %}
+													</button> <!-- /accordion-button -->
+												</h2> <!-- /accordion-header -->
+
+												<div id="payment-accordion-10" class="accordion-collapse collapse" aria-labelledby="payment-accordion-head-10" data-bs-parent="#payment-accordion">
+													<div class="accordion-body">
+														{% if req_partner.ip_name %}
+
+															<div class="mb-3">
+																<input id="ipru_name" data-button="ip_button" name="ipru_name" type="text" class="form-control" placeholder="Название организации" value="{{ req_partner.ip_name }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="ipru_address" name="ipru_address" type="text" class="form-control" placeholder="Юридический адрес организации" value="{{ req_partner.ip_address }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="ipru_inn" name="ipru_inn" type="text" class="form-control" placeholder="ИНН" value="{{ req_partner.ip_inn }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="ipru_ogrn" name="ipru_ogrn" type="text" class="form-control" placeholder="ОГРН" value="{{ req_partner.ip_ogrn }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="ipru_rs" name="ipru_rs" type="text" class="form-control" placeholder="Расчётный счёт" value="{{ req_partner.ip_rs }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="ipru_bank" name="ipru_bank" type="text" class="form-control" placeholder="Банк" value="{{ req_partner.ip_bank }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="ipru_inn_bank" name="ipru_inn_bank" type="text" class="form-control" placeholder="ИНН банка" value="{{ req_partner.ip_bank_inn }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="ipru_bik_bank" name="ipru_bik_bank" type="text" class="form-control" placeholder="БИК банка" value="{{ req_partner.ip_bank_bik }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="ipru_ks_bank" name="ipru_ks_bank" type="text" class="form-control" placeholder="Корреспондентский счёт банка" value="{{ req_partner.ip_bank_ks }}" disabled>
+															</div>
+
+														{% else %}
+
+															<div class="mb-3">
+																<input id="ipru_name" data-button="ip_button" name="ipru_name" type="text" class="form-control" placeholder="Название организации">
+															</div>
+															<div class="mb-3">
+																<input id="ipru_address" name="ipru_address" type="text" class="form-control" placeholder="Юридический адрес организации">
+															</div>
+															<div class="mb-3">
+																<input id="ipru_inn" name="ipru_inn" type="text" class="form-control" placeholder="ИНН">
+															</div>
+															<div class="mb-3">
+																<input id="ipru_ogrn" name="ipru_ogrn" type="text" class="form-control" placeholder="ОГРН">
+															</div>
+															<div class="mb-3">
+																<input id="ipru_rs" name="ipru_rs" type="text" class="form-control" placeholder="Расчётный счёт">
+															</div>
+															<div class="mb-3">
+																<input id="ipru_bank" name="ipru_bank" type="text" class="form-control" placeholder="Банк">
+															</div>
+															<div class="mb-3">
+																<input id="ipru_inn_bank" name="ipru_inn_bank" type="text" class="form-control" placeholder="ИНН банка">
+															</div>
+															<div class="mb-3">
+																<input id="ipru_bik_bank" name="ipru_bik_bank" type="text" class="form-control" placeholder="БИК банка">
+															</div>
+															<div class="mb-3">
+																<input id="ipru_ks_bank" name="ipru_ks_bank" type="text" class="form-control" placeholder="Корреспондентский счёт банка">
+															</div>
+
+														{% endif %}
+													</div> <!-- /accordion-body -->
+												</div> <!-- /accordion-collapse -->
+											</div> <!-- /accordion-item -->
+
+
+											<div class="accordion-item">
+												<h2 class="accordion-header" id="payment-accordion-head-11">
+													<button id="ooop_button" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment-accordion-11" aria-expanded="false" aria-controls="payment-accordion-11">
+														Юр. лицо РФ
+														{% if req_partner.oooru_name %}
+														<i class="fa-regular fa-file-check ms-3 text-success"></i>
+														{% else %} 
+														{% endif %}
+													</button> <!-- /accordion-button -->
+												</h2> <!-- /accordion-header -->
+
+												<div id="payment-accordion-11" class="accordion-collapse collapse" aria-labelledby="payment-accordion-head-11" data-bs-parent="#payment-accordion">
+													<div class="accordion-body">
+														{% if req_partner.oooru_name %}
+
+															<div class="mb-3">
+																<input id="oooru_name" data-button="ooop_button" name="oooru_name" type="text" class="form-control" placeholder="Название организации" value="{{ req_partner.oooru_name }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="oooru_address"name="oooru_address" type="text" class="form-control" placeholder="Юридический адрес организации" value="{{ req_partner.oooru_address }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="oooru_inn" name="oooru_inn" type="text" class="form-control" placeholder="ИНН" value="{{ req_partner.oooru_inn }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="oooru_kpp" name="oooru_kpp" type="text" class="form-control" placeholder="КПП" value="{{ req_partner.oooru_kpp }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="oooru_ogrn" name="oooru_ogrn" type="text" class="form-control" placeholder="ОГРН" value="{{ req_partner.oooru_ogrn }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="oooru_rs" name="oooru_rs" type="text" class="form-control" placeholder="Расчётный счёт" value="{{ req_partner.oooru_rs }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="oooru_bank" name="oooru_bank" type="text" class="form-control" placeholder="Банк" value="{{ req_partner.oooru_bank }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="oooru_inn_bank" name="oooru_inn_bank" type="text" class="form-control" placeholder="ИНН банка" value="{{ req_partner.oooru_bank_inn }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="oooru_bik_bank" name="oooru_bik_bank" type="text" class="form-control" placeholder="БИК банка" value="{{ req_partner.oooru_bank_bik }}" disabled>
+															</div>
+															<div class="mb-3">
+																<input id="oooru_ks_bank" name="oooru_ks_bank" type="text" class="form-control" placeholder="Корреспондентский счёт банка" value="{{ req_partner.oooru_bank_ks }}" disabled>
+															</div>
+
+														{% else %}
+
+															<div class="mb-3">
+																<input id="oooru_name" data-button="ooop_button" name="oooru_name" type="text" class="form-control" placeholder="Название организации">
+															</div>
+															<div class="mb-3">
+																<input id="oooru_address"name="oooru_address" type="text" class="form-control" placeholder="Юридический адрес организации">
+															</div>
+															<div class="mb-3">
+																<input id="oooru_inn" name="oooru_inn" type="text" class="form-control" placeholder="ИНН">
+															</div>
+															<div class="mb-3">
+																<input id="oooru_kpp" name="oooru_kpp" type="text" class="form-control" placeholder="КПП">
+															</div>
+															<div class="mb-3">
+																<input id="oooru_ogrn" name="oooru_ogrn" type="text" class="form-control" placeholder="ОГРН">
+															</div>
+															<div class="mb-3">
+																<input id="oooru_rs" name="oooru_rs" type="text" class="form-control" placeholder="Расчётный счёт">
+															</div>
+															<div class="mb-3">
+																<input id="oooru_bank" name="oooru_bank" type="text" class="form-control" placeholder="Банк">
+															</div>
+															<div class="mb-3">
+																<input id="oooru_inn_bank" name="oooru_inn_bank" type="text" class="form-control" placeholder="ИНН банка">
+															</div>
+															<div class="mb-3">
+																<input id="oooru_bik_bank" name="oooru_bik_bank" type="text" class="form-control" placeholder="БИК банка">
+															</div>
+															<div class="mb-3">
+																<input id="oooru_ks_bank" name="oooru_ks_bank" type="text" class="form-control" placeholder="Корреспондентский счёт банка">
+															</div>
+
+														{% endif %}
+													</div> <!-- /accordion-body -->
+												</div> <!-- /accordion-collapse -->
+											</div> <!-- /accordion-item -->
+
+										</div> <!-- /accordion -->
+
+										<div class="text-bg-outline-warning p-4 mt-3 rounded-3" hidden>
+											<div class="fw-bold text-black mb-3">
+												Для сохранения реквизитов введите код из Telegram
+											</div>
+
+											<div class="input-group">
+												<input name="sec_code" class="form-control" type="text" placeholder="Временный код из Telegram">
+												<button type="button" class="btn btn-warning">
+													Подтвердить
+												</button> <!-- /btn -->
+											</div> <!-- /input-group -->
+
+											<div class="small text-black mt-3">
+												Код можно отправить повторно через <b>0</b> сек.
+
+												<a href="javascript:void(0)" style="display: inline;">
+													Отправить
+												</a>
+											</div>
+										</div> <!-- /sec-code -->
+
+										<div class="d-grid mt-4 but_authanticate">
+											<button type="button" name="payment_details" id="payAddB" class="payAddB btn btn-primary" >
+												Сохранить
+											</button> <!-- /btn -->
+										</div> <!-- /btn-container -->
+
+									</form> <!-- /form -->
+								</div> <!-- /card-body -->
+							</div> <!-- /card -->
+						</div> <!-- /payment-details -->
+
+
+						<div class="tab-pane" id="referrals">
+							<div class="card">
+								<div class="card-body">
+									<div class="h5 fw-bold mb-4">
+										Привлечение рефералов
+									</div> <!-- /title -->
+
+									<div class="row mb-3">
+										<div class="col-md-3">
+											<label class="form-label">
+												Ссылка для привлечения
+											</label>
+										</div> <!-- /col -->
+
+										<div class="col-md-9">
+											<div class="input-group">
+												<button onclick="copyTextToClipboard('https://app.offering.pro/reg/{{ profile_info.ref_link }}/')" type="button" class="input-group-text" data-bs-toggle="tooltip" data-bs-title="Скопировать" title="Скопировать">
+													<i class="fa-regular fa-clipboard"></i>
+												</button>
+												<input type="text" class="form-control" name="url" id="url" value="https://app.offering.pro/reg/{{ profile_info.ref_link }}/" disabled="">
+											</div> <!-- /input-group -->
+										</div> <!-- /col -->
+									</div> <!-- /row -->
+
+									<div class="row mb-3">
+										<div class="col-md-3">
+											<label class="form-label">
+												Процент отчислений
+											</label>
+										</div> <!-- /col -->
+
+										<div class="col-md-9">
+											<input type="text" class="form-control" value="{{ profile_info.referal_fees|numb_format }}%" disabled="">
+										</div> <!-- /col -->
+									</div> <!-- /row -->
+
+
+									<div class="h5 fw-bold mb-4">
+										Список рефералов
+									</div> <!-- /title -->
+
+									<div class="table-responsive">
+											<table class="table table-bordered text-nowrap mb-0">
+												{% if refer_info %}
+												<thead>
+													<tr>
+														<th>Реферал</th>
+														<th>Дата привлечения</th>
+														<th>Доход</th>
+													</tr>
+												</thead>
+												{% for ref in refer_info %}
+												<tbody>
+													<tr>
+														<td>{{ ref.email }}</td>
+														<td>{{ ref.date }}</td>
+														<td>{{ ref.amount|numb_format }}</td>
+													</tr>
+												</tbody>
+												{% endfor %}
+												<tfoot>
+													<tr>
+														<th colspan="2">
+															Итого
+														</th>
+														<th>
+															{{ profit_from_referals|numb_format }}
+														</th>
+													</tr>
+												</tfoot>
+												{% else %}
+												<div class="alert alert-warning d-flex align-items-center mb-0" role="alert">
+													<i class="fas fa-exclamation-triangle me-2"></i>
+													<div>
+														Привлеченных рефералов пока нет
+													</div>
+												</div>
+												{% endif %}
+											</table> <!-- /table -->
+										</div> <!-- /table-responsive -->
+								</div> <!-- /card-body -->
+							</div> <!-- /card -->
+						</div> <!-- /referrals -->
+
+						{% if open == 'password' %}
+						<div class="tab-pane active" id="settings">
+						{% else %}
+						<div class="tab-pane" id="settings">
+						{% endif %}
+							<div class="card">
+								<div class="card-body" data-select2-id="12">
+									<div data-select2-id="11" name="password" id="pwd_page">
+
+										<div class="h5 fw-bold mb-4">
+											Смена пароля
+										</div> <!-- /title -->
+
+										<div class="row mb-3">
+											<div class="col-md-3">
+												<label class="form-label">
+													Текущий пароль
+												</label>
+											</div> <!-- /col -->
+
+											<div class="col-md-9">
+												<input id="current_pwd" autocomplete="new-password" type="password" name="password" class="form-control check_pass" placeholder="********">
+											</div> <!-- /col -->
+										</div> <!-- /row -->
+
+										<div class="row mb-3">
+											<div class="col-md-3">
+												<label class="form-label">
+													Новый пароль (Не менее 6 символов)
+												</label>
+											</div> <!-- /col -->
+
+											<div class="col-md-9">
+												<input type="password" name="newpassword" id="newpassword1" class="form-control check_pass" placeholder="********">
+											</div> <!-- /col -->
+										</div> <!-- /row -->
+
+										<div class="row mb-3 current_pwd_not_res">
+											<div class="col-md-3">
+												<label class="form-label">
+													Повторите новый пароль
+												</label>
+											</div> <!-- /col -->
+
+											<div class="col-md-9">
+												<input type="password" name="newpassword2" id="newpassword2" class="form-control check_pass" placeholder="********">
+											</div> <!-- /col -->
+										</div> <!-- /row -->
+										
+										<div class="form-floating telegram_pwd mt-3 mb-3" hidden>
+											<input name="telegram_mess_for_pwd" class="form-control" id="telegram_mess_for_pwd" placeholder="******">
+											<label for="telegram_mess_for_pwd">
+												Введите код полученный из Telegram
+											</label>
+										</div> <!-- /form-floating -->
+
+										<div class="text-center">
+											<button type="submit" class="btn btn-primary save_new_pwd" disabled>
+												Сохранить
+											</button> <!-- /btn -->
+										</div> <!-- /btn-container -->
+									</div> <!-- /form -->
+								</div> <!-- /card-body -->
+							</div> <!-- /card -->
+						</div> <!-- /settings -->
+					</div> <!-- /tab-content -->
+				</div> <!-- /col -->
+			</div> <!-- /row -->
+		</div>
+	</div>	
+
+	<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+		<div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="toast-header">
+				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+			</div>
+			<div class="toast-body" id="toast_content">
+				
+			</div>
+		</div>	
+	</div>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1"
+		 role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel"> </h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div>
+					<img src="{% static 'img/contest/Banner.png' %}" class="card-img img-fluid" alt="...">
+				</div>
+				<div>
+					<div>
+						<strong>Не пропусти BROCONF 2 - главную арбитражную тусовку уходящего года!</strong><br><br>
+					</div>
+					<div>
+						Уже 31 октября начнется форум по арбитражу трафика и интернет-маркетингу BROCONF 2! 
+						С прошлого раза ивент заметно вырос и будет проходить 2 дня - 31 октября и 1 ноября.<br><br>
+					</div>
+					<div>
+						Разумеется, вас ждет выставочная зона с представителями топ-компаний рынка и насыщенная программа с выступлениями как давно известных арбитражных звезд, 
+						так и с только набирающими популярность спикерами.<br><br>
+					</div>
+					<div>
+						Но не стоит забывать, что главное на арбитражной тусовке - нетворкинг! А работает он особенно хорошо только среди топов рынка на Afterparty, 
+						которое будет проходить в одном из лучших лаунджей города - VK GIPSY.
+						Море алкоголя, вкусная еда, зажигательное шоу и красивые девушки - все это в одном шаге от тебя, осталось только купить билет! 
+						Хедлайнерами вечера выступают всем известные GAYAZOV$ BROTHER$, 
+						а поддать огонька поможет стремительно набирающая популярность реп-группа CAPTOWN.<br><br>
+					</div>
+					<div>
+						Но и до самой конференции вам точно будет, чем заняться! Ребята из PressAFF уже готовят свое квиз-препати 30го октября, 
+						а дополнительные тусовки будут объявлены совсем скоро! Следить за новостями предстоящей конференции можно на <a href="https://mybroconf.com/">сайте</a>, 
+						в <a href="https://t.me/broconf">телеграм-канале</a> и официальном <a href="https://t.me/broconfchat">чате</a><br><br>
+					</div>
+					
+					<strong> 
+						По промокоду 
+						<span onclick="copyTextToClipboard( 'OFERRINGBRO20' ); return false;" type="button" class="small ms-1" data-bs-toggle="tooltip" data-bs-title="Скопировать промокод">
+							"OFERRINGBRO20"
+						</span>
+						вы получите “20%” скидку на любую категорию билетов! Поторопитесь, цена постоянно увеличивается!
+					</strong> 
+				
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a type="button" class="btn btn-primary" href="https://mybroconf.com/" target="_blank">Узнать потробнее</a>
+				<button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Закрыть</button>
+			</div>
+			</div>
+		</div>
+	</div>
+
+<script src="https://cdn-app.offering.pro/static/js/payments_req_partner.js?v=2"></script>
+
+<script type="text/javascript">
+	$(function(){
+		$("#birth_date_mc").datepicker({
+			dateFormat: 'yy-mm-dd',
+			maxDate: '0'})
+	});
+</script>
+
+<script>
+	// MASKS CARD
+	jQuery(function($){
+		$('#data_kz').mask("9999 9999 9999 9999? 9999");
+	});
+	jQuery(function($){
+		$('#rucard_card_data').mask("9999 9999 9999 9999? 9999");
+	});
+	jQuery(function($){
+		$('#data_card_to_card').mask("9999 9999 9999 9999? 9999");
+	});
+	jQuery(function($){
+		$('#data_mastercard_worldwide').mask("9999 9999 9999 9999? 9999");
+	});
+
+	// INN
+	$('#ipru_inn').mask('9999999999?99');
+	$('#oooru_inn').mask('9999999999?99');
+
+	// KPP
+	$('#oooru_kpp').mask('999999999');
+
+	// OGRN
+	$('#ipru_ogrn').mask('9999999999999');
+	$('#oooru_ogrn').mask('9999999999999');
+
+	// RS
+	$('#ipru_rs').mask('99999 999 9 9999 9999999');
+	$('#oooru_rs').mask('99999 999 9 9999 9999999');
+
+	// INN
+	$('#ipru_inn_bank').mask('9999999999');
+	$('#oooru_inn_bank').mask('9999999999');
+
+	// BIK
+	$('#ipru_bik_bank').mask('999999999');
+	$('#oooru_bik_bank').mask('999999999');
+
+	// KS
+	$('#ipru_ks_bank').mask("99999 999 9 9999 9999999");
+	$('#oooru_ks_bank').mask("99999 999 9 9999 9999999");
+
+</script>
+
+<script>
+
+	$('#contacts_edit_save').on('click', function(){
+		$.ajax({
+			url: url,
+			method: 'POST',
+			data: {
+				csrfmiddlewaretoken: token,
+				type: 'contacts_edit',
+				telephone_post: $('#telephone_number').val(),
+				nick_top_post: $('#nick_top').val()
+			}
+		}).then(function(result){
+			$('#toast_content').text('Данные успешно сохранены')
+			var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+			var toastList = toastElList.map(function(toastEl) {
+				// Creates an array of toasts (it only initializes them)
+				return new bootstrap.Toast(toastEl) // No need for options; use the default options
+			});
+			toastList.forEach(toast => toast.show()); // This show them
+			x = 1;
+		}).catch(function(err){
+			x = 0;
+		})
+	});
+
+	$('#current_pwd').on('input', function(){
+		$.ajax({
+			url: url,
+			method: 'POST',
+			data: {
+				csrfmiddlewaretoken: token,
+				type: 'check_pwd',
+				current_pwd_post: $('#current_pwd').val()
+			}
+		}).then(function(result){
+			res = JSON.parse(result)
+			if (res.status == 'OK'){
+				$('#current_pwd').removeClass('is-invalid')
+				$('#current_pwd').addClass('is-valid')
+			}else{
+				$('#current_pwd').removeClass('is-valid')
+				$('#current_pwd').addClass('is-invalid')
+			}
+		}).catch(function(err){
+			var x = 0;
+		})
+	});
+
+	$('#newpassword1').on('input change', function(){
+		if ($('#newpassword1').val() != $('#newpassword2').val()){
+			$('#newpassword2').removeClass('is-valid');
+			$('#newpassword2').addClass('is-invalid');
+		}else{
+			$('#newpassword2').addClass('is-valid');
+			$('#newpassword2').removeClass('is-invalid');
+		}
+		if($('#newpassword1').val().length >= 6){
+			$('#newpassword1').removeClass('is-invalid');
+			$('#newpassword1').addClass('is-valid');
+		}else{
+			$('#newpassword1').addClass('is-invalid');
+			$('#newpassword1').removeClass('is-valid');
+		}
+	});
+
+	$('#newpassword2').on('input change', function(){
+		if($('#newpassword2').val() == $('#newpassword1').val()){
+			$('#newpassword2').removeClass('is-invalid');
+			$('#newpassword2').addClass('is-valid');
+		}else{
+			$('#newpassword2').addClass('is-invalid');
+			$('#newpassword2').removeClass('is-valid');
+		}
+	});
+
+	$('.save_new_pwd').on('click', function(event){
+		if ($('#tlf_for_change_pwd').val()){
+			$('.save_new_pwd').attr('hidden', 'true');
+			$.ajax({
+				url: url,
+				method: 'POST',
+				data: {
+					csrfmiddlewaretoken: token,
+					type: 'check_auth_for_pwd'
+				}
+			}).then(function(result){
+				$('.telegram_pwd').removeAttr('hidden');
+			}).catch(function(err){
+				x = 0
+			})
+
+			$('#telegram_mess_for_pwd').on('input', function(){
+				var tel_val_pwd = $('#telegram_mess_for_pwd').val();
+				if (tel_val_pwd.length == 6){
+					$.ajax({
+						url: url,
+						method: 'POST',
+						data: {
+							csrfmiddlewaretoken: token,
+							type: 'totfa_password_check_code',
+							message_code: tel_val_pwd
+						}
+					}).then(function(result){
+						var response = JSON.parse(result)
+						if(response.detail == 'OK' || response.detail == 'ok'){
+							change_pwd_req($('#newpassword2').val())
+							$('.telegram_pwd').remove();
+							$('.save_new_pwd').removeAttr('hidden');
+						}else{
+							$('#telegram_mess_for_pwd').addClass('is-invalid');
+						}
+					}).catch(function(err){
+						x = 0;
+					})
+				}
+			})
+		}else{
+			change_pwd_req($('#newpassword2').val());
+		}
+	});
+
+	function change_pwd_req(password){
+		$.ajax({
+			url: url,
+			method: 'POST',
+			data: {
+				csrfmiddlewaretoken: token,
+				type: 'change_pwd',
+				new_pwd_post: password
+			}
+		}).then(function(result){
+			$('#toast_content').text('Пароль успешно сменен')
+			var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+			var toastList = toastElList.map(function(toastEl) {
+				// Creates an array of toasts (it only initializes them)
+				return new bootstrap.Toast(toastEl) // No need for options; use the default options
+			});
+			toastList.forEach(toast => toast.show()); // This show them
+			$('#telegram_mess_for_pwd').val('');
+			$('.check_pass').val('');
+			$('.save_new_pwd').attr('disabled', 'true');
+			$('#newpassword2').removeClass('is-valid');
+			$('#newpassword1').removeClass('is-valid');
+			$('#current_pwd').removeClass('is-valid');
+		}).catch(function(err){
+			x = 0;
+		})
+	};
+
+	$('.check_pass').on('input change', function(){
+		var el = $('.check_pass')
+		for (let i=0; el.length>i; i++){
+			if(!($('#newpassword2').val()) || el[i].classList.contains('is-invalid') || (!($('#current_pwd').val()) || $('#current_pwd').hasClass('is-invalid')) || ($('#newpassword1').val().length < 6)){
+				$('.save_new_pwd').attr('disabled', 'true');
+			}else{
+				$('.save_new_pwd').removeAttr('disabled');
+			}
+		}
+	});
+
+</script>
+
+<script>
+
+	$('#payAddB').on('click', function(){
+		if ($('#two_factor_auth').val() == 1){
+			$('.payAddB').attr('hidden', 'true');
+			$('.telegram_mess_req').remove();
+			var inputEl = `
+				<div class="form-floating telegram_mess_req mt-3 mb-3">
+					<input name="telegram_mess_req" class="form-control" id="telegram_mess_req" placeholder="******">
+					<label for="telegram_mess_req">
+						Введите код полученный из Telegram
+					</label>
+				</div> <!-- /form-floating -->`;
+
+			$('.but_authanticate').prepend(inputEl);
+
+			$.ajax({
+				url: url,
+				method: 'POST',
+				data: {
+					csrfmiddlewaretoken: token,
+					type: 'check_auth_for_req'
+				}
+			}).then(function(result){
+				var x = 1;
+			}).catch(function(err){
+				var x = 0;
+			})
+			
+			$('#telegram_mess_req').on('input', function(){
+				var val_el = $('#telegram_mess_req').val();
+				if (val_el.length == 6){
+					$.ajax({
+						url: url,
+						method: 'POST',
+						data: {
+							csrfmiddlewaretoken: token,
+							type: 'check_tlg_mess_req',
+							message_code: val_el
+						}
+					}).then(function(result){
+						var response = JSON.parse(result)
+						if(response.detail == 'ok'){
+							$('.telegram_mess_req').remove();
+							$('.such_message').remove();
+							addPayments();
+						}else{
+							$('#telegram_mess_req').removeClass('is-valid');
+							$('#telegram_mess_req').addClass('is-invalid');
+						}
+					}).catch(function(err){
+						x = 0;
+					})
+				}
+			})
+
+		}else{
+			addPayments();
+		}
+
+	});
+
+	var value_two_fack = '';
+
+	var inputElForChangeTFA = `
+	<div class="form-floating inputElForChangeTFA mt-3 mb-3">
+		<input name="inputElForChangeTFA" class="form-control" id="inputElForChangeTFA" placeholder="******">
+		<div class="invalid-feedback">
+			Неверный код, введите корректный код
+		</div>
+		<label for="inputElForChangeTFA">
+			Введите код полученный из Telegram
+		</label>
+	</div> <!-- /form-floating -->`;
+
+	var inputElForChangeTelegram = `
+	<div class="form-floating inputElForChangeTelegram mt-3 mb-3">
+		<input name="inputElForChangeTelegram" class="form-control" id="inputElForChangeTelegram" placeholder="******">
+		<div class="invalid-feedback">
+			Неверный код, введите корректный код
+		</div>
+		<label for="inputElForChangeTelegram">
+			Введите код полученный из Telegram
+		</label>
+	</div> <!-- /form-floating -->`;
+
+	// смена телеги	
+	$('#change_tlg_id').on('click', function(){
+		$('.inputElForChangeTelegram').remove();
+		$('.two_factor_auth').append(inputElForChangeTelegram);
+
+		$.ajax({
+			url: url,
+			method: 'POST',
+			data: {
+				csrfmiddlewaretoken: token,
+				type: 'request_change_telegram'
+			}
+		}).then(function(result){
+			var c = 1;
+		}).catch(function(err){
+			var c = 0;
+		});
+
+		check_telegrame_change();
+
+	});
+
+	function check_telegrame_change(){
+		$('#inputElForChangeTelegram').on('input', function(){
+			var val_el = $('#inputElForChangeTelegram').val();
+			if (val_el.length == 6){
+				$.ajax({
+					url: url,
+					method: 'POST',
+					data: {
+						csrfmiddlewaretoken: token,
+						type: 'check_telegram_code',
+						message_code: parseInt(val_el)
+					}
+				}).then(function(result){
+					var response = JSON.parse(result)
+					if (response.href == 'error'){
+						$('#inputElForChangeTelegram').addClass('is-invalid')
+					}else{
+						$('.inputElForChangeTelegram').remove();
+
+						$('#toast_content').text('Нажмите ЗАПУСТИТЬ в своем Telegram для завершения привязки нового Telegram')
+						var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+						var toastList = toastElList.map(function(toastEl) {
+							// Creates an array of toasts (it only initializes them)
+							return new bootstrap.Toast(toastEl) // No need for options; use the default options
+						});
+						toastList.forEach(toast => toast.show()); // This show them
+
+						window.location.href = response.href;
+					}
+				}).catch(function(err){
+					x = 0;
+				})
+			}
+		});	
+	};	
+
+	$('#two_fack_auth_choice').on('click', function(event){
+		if ($('#two_fack_auth_choice').is(':checked')){
+			value_two_fack = 1
+		}else{
+			value_two_fack = 0
+		}
+		if(value_two_fack == 1){
+			send_api2_wantTFA(value_two_fack);
+		} else {
+			$('.inputElForChangeTFA').remove();
+			$('.two_factor_auth').append(inputElForChangeTFA);
+			$.ajax({
+				url: url,
+				method: 'POST',
+				data: {
+					csrfmiddlewaretoken: token,
+					type: 'request_change_tfa'
+				}
+			}).then(function(result){
+				var x = 1
+			}).catch(function(err){
+				var x = 0
+			})
+			$('#inputElForChangeTFA').on('input', function(){
+				var val_el = $('#inputElForChangeTFA').val();
+				if (val_el.length == 6){
+					$.ajax({
+						url: url,
+						method: 'POST',
+						data: {
+							csrfmiddlewaretoken: token,
+							type: 'check_tlg_mess_totfa',
+							message_code: parseInt(val_el)
+						}
+					}).then(function(result){
+						var response = JSON.parse(result)
+						if(response.detail == 'ok'){
+							$('.inputElForChangeTFA').remove();
+							send_api2_wantTFA(value_two_fack);
+							$('#two_fack_auth_choice').prop('checked', false);
+						}else if (response.detail == 'Неверный код'){
+							$('#inputElForChangeTFA').addClass('is-invalid');
+						}
+					}).catch(function(err){
+						x = 0;
+					})
+				}
+			})
+			event.preventDefault();
+		}
+		
+	});
+
+	function send_api2_wantTFA(value_two_fack){
+		$.ajax({
+			url: url,
+			method: 'POST',
+			data: {
+				csrfmiddlewaretoken: token,
+				type: 'want_two_fack',
+				value_two_fack_post: value_two_fack
+			}
+		}).then(function(result){
+			if(value_two_fack == 1){
+				$('#toast_content').text('2-факторная аутентификация включена')
+			}else{
+				$('#toast_content').text('2-факторная аутентификация отключена')
+			}
+			var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+			var toastList = toastElList.map(function(toastEl) {
+				// Creates an array of toasts (it only initializes them)
+				return new bootstrap.Toast(toastEl) // No need for options; use the default options
+			});
+			toastList.forEach(toast => toast.show()); // This show them
+			x = 1
+		}).catch(function(err){
+			x = 0
+		})
+	};
+
+</script>
+
+{% endblock content %}

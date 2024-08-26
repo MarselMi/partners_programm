@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card mb-4">
+				<div class="card-body">
+					{% if not_access %}
+					<div class="alert alert-warning" role="alert">
+						<h4 class="alert-heading">
+							<i class="fa-regular fa-octagon-exclamation me-2"></i>
+							Внимание!
+						</h4>
+						<p class="mb-0">Доступ закрыт</p>
+					</div> <!-- /alert -->
+					{% else %}
+					<div class="row d-flex align-items-center">
+						<div class="col-12 col-md-3 col-sm-4">
+							<img class="img-fluid" src="https://cdn-offers.offering.pro/media/{{ offer_info.logo }}" alt="">
+						</div> <!-- /col -->
+
+						<div class="col-12 col-md-9 col-sm-8">
+							<div class="table-responsive mb-4">
+
+								<table class="table table-bordered text-nowrap mb-0">
+									<tbody>
+									<tr>
+										<td class="w-25">ГЕО:</td>
+										<td class="fw-bold">{{ offer_info.geo }}</td>
+									</tr>
+									<tr>
+										<td>Отчисления:</td>
+										<td class="fw-bold">{{ offer_info.deduction|numb_format }}%</td>
+									</tr>
+									{% if tarif_info %}
+										<tr class="table-primary">
+											<td>Ребилл по тарифу - {{ tarif_info.tarif_name }}:</td>
+											<td class="fw-bold"> {{ tarif_info.tarif_sum|numb_format }} <i class="fa-regular fa-ruble-sign"></i></td>
+										</tr>
+										<tr class="table-primary">
+											<td>Периодичность списания по тарифу:</td>
+											<td class="fw-bold">{{ tarif_info.period }} дней</td>
+										</tr>
+
+										<tr class="table-secondary">
+											<td>Ребилл по тарифу - {{ tarif_info.two_tarif_name }}:</td>
+											<td class="fw-bold"> {{ tarif_info.two_tarif_sum|numb_format }} <i class="fa-regular fa-ruble-sign"></i></td>
+										</tr>
+										<tr class="table-secondary">
+											<td>Периодичность списания по тарифу:</td>
+											<td class="fw-bold">{{ tarif_info.two_period }} дней</td>
+										</tr>
+
+										<tr>
+											<td>Активация:</td>
+											<td class="fw-bold"> {{ tarif_info.freeday_sum|numb_format }} <i class="fa-regular fa-ruble-sign"></i></td>
+										</tr>
+										<tr>
+											<td>Пробный период:</td>
+											<td class="fw-bold">{{ tarif_info.freeday }} дней</td>
+										</tr>
+									{% else %}
+										<tr>
+											<td>Ребилл:</td>
+											<td class="fw-bold"> {{ offer_info.rebill|numb_format }} <i class="fa-regular fa-ruble-sign"></i></td>
+										</tr>
+										<tr>
+											<td>Периодичность списания:</td>
+											<td class="fw-bold">{{ offer_info.payments_periodicity }} дней</td>
+										</tr>
+										<tr>
+											<td>Активация:</td>
+											<td class="fw-bold"> {{ offer_info.first_pay|numb_format }} <i class="fa-regular fa-ruble-sign"></i></td>
+										</tr>
+										<tr>
+											<td>Пробный период:</td>
+											<td class="fw-bold">{{ offer_info.trial }} дней</td>
+										</tr>
+									{% endif %}
+									</tbody>
+								</table> <!--/table-->
+							</div> <!-- /table-responsive -->
+
+
+							<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4">
+								Запрещённые виды трафика:
+							</div>
+
+							<ul class="list-unstyled alert alert-warning mb-4">
+								{% for untraffic in offer_info.unexepted_traffic %}
+								<li>
+									<i class="fa-regular fa-octagon-xmark text-danger me-2"></i>
+									{{ untraffic }}
+								</li>
+								{% endfor %}
+							</ul>
+
+
+							<div
+									class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-3">
+								Основной домен
+							</div>
+
+							<ul class="mb-0">
+								<li>
+									<a target="_blunk" href="https://{{offer_info.main_domain}}">
+										{{ offer_info.main_domain }}
+									</a>
+								</li>
+							</ul>
+						</div> <!-- /col -->
+					</div> <!-- /row -->
+
+
+					<div class="border-top mt-4 mb-4"></div>
+
+
+					<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4">
+						Описание
+					</div>
+
+					{% for descript in offer_info.description %}
+					<p>{{ descript }}</p>
+					{% endfor %}
+
+					<div class="border-top mt-4 mb-4"></div>
+
+					<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4">
+						Доступные лендинги
+					</div>
+
+					<div class="row">
+						{% for land in landings_list %}
+							
+
+							<div class="landcheck col-12 col-md-3 col-sm-4 text-center lands lands_{{ land.offer_id }}" value="{{ land.offer_id }}" id="{{ land.offer_id }}">
+								<figure class="figure">
+									<div>
+										<img class="figure-img img-fluid" src="https://cdn-offers.offering.pro/media/{{ land.screenshot }}" alt="">
+									</div>
+									<figcaption class="figure-caption text-center">{{ land.name }}</figcaption>
+								</figure>
+							</div> <!-- /offers-land -->
+							
+						{% endfor %}
+					</div> <!-- /row -->
+
+
+
+
+					<div class="mt-4">
+						<a class="btn btn-primary d-block" href="{% url 'add_stream' %}">
+							Создать поток
+						</a>
+					</div>
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+			{% endif %}
+		</div> <!-- /col -->
+	</div> <!--/row-->
+
+{% endblock content %}

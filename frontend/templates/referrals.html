@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card mb-4">
+				<div class="card-header d-flex align-items-center card-header-no-bg border-bottom-0">
+					<div class="card-title h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-0">
+						Привлечение рефералов
+					</div> <!-- /card-title -->
+				</div> <!-- /card-header -->
+
+				<div class="card-body">
+					<div class="row mb-3">
+						<div class="col-md-3">
+							<label class="form-label">
+								Ссылка для привлечения
+							</label>
+						</div> <!-- /col -->
+
+						<div class="col-md-9">
+							<div class="input-group">
+								<button onclick="copyTextToClipboard('https://app.offering.pro/reg/{{ profile_info.ref_link }}/')" type="button" class="input-group-text" title="" data-bs-toggle="tooltip" data-bs-title="Скопировать" data-bs-original-title="Скопировать">
+									<i class="far fa-clipboard"></i>
+								</button>
+
+								<input type="text" class="form-control" name="url" id="url" value="https://app.offering.pro/reg/{{ profile_info.ref_link }}/" disabled="">
+							</div>
+						</div> <!-- /col -->
+					</div> <!-- /row -->
+
+					<div class="row mb-4">
+						<div class="col-md-3">
+							<label class="form-label">
+								Процент отчислений
+							</label>
+						</div> <!-- /col -->
+
+						<div class="col-md-9">
+							<input type="text" class="form-control" value="{{ profile_info.referal_fees|numb_format }}%" disabled="">
+						</div> <!-- /col -->
+					</div> <!-- /row -->
+
+
+					<div class="border-top mb-4"></div>
+
+
+					<div class="h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-4">
+						Список рефералов
+					</div> <!-- /subtitle -->
+
+					<div class="table-responsive">
+						<table class="table table-bordered text-nowrap mb-0">
+							{% if refer_info %}
+							<thead>
+								<tr>
+									<th>Реферал</th>
+									<th>Дата привлечения</th>
+									<th>Доход</th>
+								</tr>
+							</thead>
+							{% for ref in refer_info %}
+							<tbody>
+								<tr>
+									<td>{{ ref.email }}</td>
+									<td>{{ ref.date }}</td>
+									<td>{{ ref.amount|numb_format }}</td>
+								</tr>
+							</tbody>
+							{% endfor %}
+							<tfoot>
+								<tr>
+									<th colspan="2">
+										Итого
+									</th>
+									<th>
+										{{ profit_from_referals|numb_format }}
+									</th>
+								</tr>
+							</tfoot>
+							{% else %}
+							<div class="alert alert-warning d-flex align-items-center mb-0" role="alert">
+								<i class="fas fa-exclamation-triangle me-2"></i>
+								<div>
+									Привлеченных рефералов пока нет
+								</div>
+							</div>
+							{% endif %}
+						</table>
+					</div> <!-- /table-responsive -->
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div>
+
+{% endblock content %}

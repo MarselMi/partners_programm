@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row mb-4">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header d-flex align-items-center card-header-no-bg border-bottom-0">
+					<div class="card-title h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-0">
+						Список Постбэков
+					</div> <!-- /card-title -->
+
+					<div class="card-options ms-auto">
+						<a href="{% url 'add_postback' %}" class="btn btn-primary btn-sm">Создать PostBack</a>
+					</div> <!-- /card-options -->
+				</div> <!-- /card-header -->
+
+
+				<div class="card-body">
+					{% if postbacks_partner %}
+					<div class="table-responsive">
+						<table class="table table-bordered text-nowrap mb-0">
+							<thead>
+							<tr><th>ID</th>
+								<th>Название</th>
+								<th>Создан</th>
+								<th>Изменён</th>
+								<th>Метод</th>
+								<th>События</th>
+								<th class="text-center">Ссылка</th>
+								<th class="text-center">Действия</th>
+							</tr></thead>
+							{% for postback in postbacks_partner %}
+							<tbody>
+							<tr class="align-middle">
+								<td>{{ postback.id }}</td>
+								<td>
+									<div class="d-flex">
+										<div class="postback_name_in_table">
+										{{ postback.name }}
+										</div>
+										<a href="{% url 'logs_postback' postback_id=postback.id %}" class="post_log_link btn btn-light btn-sm ms-auto" data-bs-toggle="tooltip" data-bs-title="Логи">
+										  <i class="fa-regular fa-memo-circle-info"></i>
+										</a>
+									</div>
+								</td>
+								<td>{{ postback.created|date_change }}</td>
+								{% if postback.change_date %}
+								<td>{{ postback.change_date|date_change }}</td>
+								{% else %}
+								<td>&ndash;</td>
+								{% endif %}
+								<td>{{ postback.method }}</td>
+								<td>
+									{% for event in postback.event_id %}
+										<option>{{ event|postback_event }}</option>
+									{% endfor %}
+								</td>
+								<td class="text-center">
+									<button onclick="copyTextToClipboard( '{{ postback.link }}' ); return false;" type="button" class="btn btn-light btn-sm" data-bs-toggle="tooltip" data-bs-title="Скопировать">
+										<i class="fa-regular fa-clipboard"></i>
+									</button>
+								</td>
+								<td class="text-center">
+									<a type="button" href="{% url 'postback_edit' postback_id=postback.id %}" class="btn btn-light btn-sm" data-bs-toggle="tooltip" data-bs-title="Редактировать">
+										<i class="fa-regular fa-pen-to-square"></i>
+									</a>
+								</td>
+							</tr>
+							</tbody>
+							{% endfor %}
+						</table> <!-- /table -->
+					</div> <!-- /table-responsive -->
+					{% else %}
+					<div class="alert alert-warning" role="alert">
+						<h4 class="alert-heading">
+							<i class="fa-regular fa-octagon-exclamation me-2"></i>
+							Внимание!
+						</h4>
+						<p>Нет созданных Постбэков.</p>
+						<hr>
+						<p class="mb-0">
+							Создайте PostBack, чтобы использовать в потоках и получать статистику событий.
+						</p>
+					</div> <!-- /alert -->
+					{% endif %}
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!--/row-->
+
+{% endblock content %}

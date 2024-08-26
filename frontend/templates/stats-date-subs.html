@@ -1,0 +1,777 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<!-- breadcrumb -->
+	<div class="breadcrumb-header justify-content-between">
+		<div class="left-content">
+		<span class="main-content-title mg-b-0 mg-b-lg-1">По дате подписки</span>
+		</div>
+		<div class="justify-content-center mt-2">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item tx-15"><a href="{% url 'general' %}">Статистика</a></li>
+				<li class="breadcrumb-item active" aria-current="page">По дате подписки</li>
+			</ol>
+		</div>
+	</div>
+	<!-- /breadcrumb -->
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-body">
+					<form action="">
+						<div class="row">
+							<div class="col-12 col-sm-2 mb-3">
+								<label for="StatFilterDateSubs" class="form-label">
+									Дата пдп
+								</label> <!-- /form-label -->
+								<input type="text" class="form-control" id="StatFilterDateSubs" placeholder="27.07.2022" aria-label="27.07.2022">
+							</div> <!-- /col -->
+							<div class="col-12 col-sm-3 mb-3">
+								<label for="StatFilterPeriod" class="form-label">
+									Период
+								</label> <!-- /form-label -->
+								<div class="input-group">
+									<span class="input-group-text">С</span>
+									<input id="StatFilterPeriod" type="text" class="form-control" placeholder="21.07.2022" aria-label="21.07.2022">
+									<span class="input-group-text">По</span>
+									<input type="text" class="form-control" placeholder="27.07.2022" aria-label="27.07.2022">
+								</div> <!-- /input-group -->
+							</div> <!-- /col -->
+							<div class="col-12 col-sm-2 mb-3">
+								<label for="StatFilterStream" class="form-label">
+									Поток
+								</label> <!-- /form-label -->
+								<select id="StatFilterStream" class="form-select" aria-label="Выберите поток">
+									<option selected value="">Все потоки</option>
+									<option value="1">Поток 1</option>
+									<option value="2">Поток 2</option>
+									<option value="3">Поток 3</option>
+								</select>
+							</div> <!-- /col -->
+							<div class="col-12 col-sm-2 mb-3">
+								<label for="StatFilterOffer" class="form-label">
+									Оффер
+								</label> <!-- /form-label -->
+								<select id="StatFilterOffer" class="form-select" aria-label="Выберите оффер">
+									<option selected value="">Все офферы</option>
+									<option value="1">Оффер 1</option>
+									<option value="2">Оффер 2</option>
+									<option value="3">Оффер 3</option>
+								</select>
+							</div> <!-- /col -->
+							<div class="col-12 col-sm-3 mb-3">
+								<label for="StatFilterLanding" class="form-label">
+									Лендинг
+								</label> <!-- /form-label -->
+								<select id="StatFilterLanding" class="form-select" aria-label="Выберите лендинг">
+									<option selected value="">Все лендинги</option>
+									<option value="1">Лендинг 1</option>
+									<option value="2">Лендинг 2</option>
+									<option value="3">Лендинг 3</option>
+								</select>
+							</div> <!-- /col -->
+						</div> <!-- /row -->
+						<div id="accordionStatsDaysFilter">
+							<div id="collapseStatsDaysFilter-1" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionStatsDaysFilter">
+								<div class="row">
+									<div class="col-12 col-sm-3 mb-3">
+										<label for="StatFilterCountry" class="form-label">
+											Страна
+										</label> <!-- /form-label -->
+										<select id="StatFilterCountry" class="form-select" aria-label="Выберите страну">
+											<option selected value="">Все страны</option>
+											<option value="1">Страна 1</option>
+											<option value="2">Страна 2</option>
+											<option value="3">Страна 3</option>
+										</select>
+									</div> <!-- /col -->
+									<div class="col-12 col-sm-3 mb-3">
+										<label for="StatFilterDevice" class="form-label">
+											Тип устройства
+										</label> <!-- /form-label -->
+										<select id="StatFilterDevice" class="form-select" aria-label="Выберите тип устройства">
+											<option selected value="">Все устройства</option>
+											<option value="1">Устройство 1</option>
+											<option value="2">Устройство 2</option>
+											<option value="3">Устройство 3</option>
+										</select>
+									</div> <!-- /col -->
+									<div class="col-12 col-sm-2 mb-3">
+										<label for="StatFilterOS" class="form-label">
+											ОС
+										</label> <!-- /form-label -->
+										<select id="StatFilterOS" class="form-select" aria-label="Выберите ОС">
+											<option selected value="">Все ОС</option>
+											<option value="1">ОС 1</option>
+											<option value="2">ОС 2</option>
+											<option value="3">ОС 3</option>
+										</select>
+									</div> <!-- /col -->
+									<div class="col-12 col-sm-2 mb-3">
+										<label for="StatFilterBrowser" class="form-label">
+											Браузер
+										</label> <!-- /form-label -->
+										<select id="StatFilterBrowser" class="form-select" aria-label="Выберите браузер">
+											<option selected value="">Все браузеры</option>
+											<option value="1">Браузер 1</option>
+											<option value="2">Браузер 2</option>
+											<option value="3">Браузер 3</option>
+										</select>
+									</div> <!-- /col -->
+									<div class="col-12 col-sm-2 mb-3">
+										<label for="StatFilterSource" class="form-label">
+											Источник
+										</label> <!-- /form-label -->
+										<select id="StatFilterSource" class="form-select" aria-label="Выберите источник">
+											<option selected value="">Все источники</option>
+											<option value="1">Источник 1</option>
+											<option value="2">Источник 2</option>
+											<option value="3">Источник 3</option>
+										</select>
+									</div> <!-- /col -->
+									<div class="col-12 col-sm-2 col-md-2 mb-3">
+										<label for="StatFilterSubAcс-1" class="form-label">
+											Субаккаунт 1
+										</label> <!-- /form-label -->
+										<input type="text" class="form-control" id="StatFilterSubAcс-1" placeholder="">
+									</div> <!-- /col -->
+									<div class="col-12 col-sm-2 col-md-2 mb-3">
+										<label for="StatFilterSubAcс-2" class="form-label">
+											Субаккаунт 2
+										</label> <!-- /form-label -->
+										<input type="text" class="form-control" id="StatFilterSubAcс-2" placeholder="">
+									</div> <!-- /col -->
+									<div class="col-12 col-sm-2 col-md-2 mb-3">
+										<label for="StatFilterSubAcс-3" class="form-label">
+											Субаккаунт 3
+										</label> <!-- /form-label -->
+										<input type="text" class="form-control" id="StatFilterSubAcс-3" placeholder="">
+									</div> <!-- /col -->
+									<div class="col-12 col-sm-2 col-md-3 mb-3">
+										<label for="StatFilterSubAcс-4" class="form-label">
+											Субаккаунт 4
+										</label> <!-- /form-label -->
+										<input type="text" class="form-control" id="StatFilterSubAcс-4" placeholder="">
+									</div> <!-- /col -->
+									<div class="col-12 col-sm-2 col-md-3 mb-3">
+										<label for="StatFilterSubAcс-5" class="form-label">
+											Субаккаунт 5
+										</label> <!-- /form-label -->
+										<input type="text" class="form-control" id="StatFilterSubAcс-5" placeholder="">
+									</div> <!-- /col -->
+									<div class="col-12 col-sm-2 col-md-2 mb-3">
+										<label for="StatFilterUTMSource" class="form-label">
+											UTM Source
+										</label> <!-- /form-label -->
+										<input type="text" class="form-control" id="StatFilterUTMSource" placeholder="">
+									</div> <!-- /col -->
+									<div class="col-12 col-sm-2 col-md-2 mb-3">
+										<label for="StatFilterUTMMedium" class="form-label">
+											UTM Medium
+										</label> <!-- /form-label -->
+										<input type="text" class="form-control" id="StatFilterUTMMedium" placeholder="">
+									</div> <!-- /col -->
+									<div class="col-12 col-sm-2 col-md-2 mb-3">
+										<label for="StatFilterUTMCampaign" class="form-label">
+											UTM Campaign
+										</label> <!-- /form-label -->
+										<input type="text" class="form-control" id="StatFilterUTMCampaign" placeholder="">
+									</div> <!-- /col -->
+									<div class="col-12 col-sm-2 col-md-3 mb-3">
+										<label for="StatFilterUTMContent" class="form-label">
+											UTM Content
+										</label> <!-- /form-label -->
+										<input type="text" class="form-control" id="StatFilterUTMContent" placeholder="">
+									</div> <!-- /col -->
+									<div class="col-12 col-sm-2 col-md-3 mb-3">
+										<label for="StatFilterUTMTerm" class="form-label">
+											UTM Term
+										</label> <!-- /form-label -->
+										<input type="text" class="form-control" id="StatFilterUTMTerm" placeholder="">
+									</div> <!-- /col -->
+								</div> <!-- /row -->
+							</div> <!-- /accordion-collapse -->
+						</div> <!-- /accordion -->
+						<div class="row">
+							<div class="col-12 text-end" id="flush-headingOne">
+								<button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#collapseStatsDaysFilter-1" aria-expanded="false" aria-controls="collapseStatsDaysFilter-1">
+									Скрыть/Раскрыть
+								</button>
+								<button type="button" class="btn btn-primary ms-3">
+									Показать
+								</button>
+							</div>
+						</div> <!-- /row -->
+					</form>
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!-- /row -->
+	<div class="row">
+		<div class="col-12 col-sm-12">
+			<div class="card">
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-bordered text-nowrap mb-0">
+							<thead>
+								<tr>
+									<th class="text-center">Дата</th>
+									<th>Хосты</th>
+									<th>Регистрации</th>
+									<th>Конверт: хост/рег</th>
+									<th>Активации</th>
+									<th>Конверт: рег/акт</th>
+									<th>Подписки</th>
+									<th>Ребиллы</th>
+									<th>Доход</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="text-center">26.07.2022</td>
+									<td>
+										<div class="d-flex">
+											19 016
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												38%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											16 367
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											1:10
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												1%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											16 367
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											1:10
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												1%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											30
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												34%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											112
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												3%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											4 480
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												3%
+											</span>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="text-center">25.07.2022</td>
+									<td>
+										<div class="d-flex">
+											30 327
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												8%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											16 367
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											1:10
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												1%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											16 367
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											1:10
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												1%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											45
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												10%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											115
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												16%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											4 600
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												16%
+											</span>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="text-center">24.07.2022</td>
+									<td>
+										<div class="d-flex">
+											27 952
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											16 367
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											1:10
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												1%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											16 367
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											1:10
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												1%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											50
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												2%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											136
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												7%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											5 440
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												7%
+											</span>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="text-center">23.07.2022</td>
+									<td>
+										<div class="d-flex">
+											25 003
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												2%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											16 367
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											1:10
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												1%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											16 367
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											1:10
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												1%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											49
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												17%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											146
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												9%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											5 840
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												9%
+											</span>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="text-center">22.07.2022</td>
+									<td>
+										<div class="d-flex">
+											25 437
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												9%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											16 367
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											1:10
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												1%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											16 367
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											1:10
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												1%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											59
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												29%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											159
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												9%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											6 360
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												9%
+											</span>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="text-center">21.07.2022</td>
+									<td>
+										<div class="d-flex">
+											27 860
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												6%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											16 367
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											1:10
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												1%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											16 367
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											1:10
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												1%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											42
+											<span class="badge bg-danger-transparent text-danger font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												18%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											146
+											<span class="badge bg-secondary-transparent text-secondary font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1" style="display: none;"></i>
+												0%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											5 840
+											<span class="badge bg-secondary-transparent text-secondary font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1" style="display: none;"></i>
+												0%
+											</span>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="text-center">20.07.2022</td>
+									<td>
+										<div class="d-flex">
+											26 273
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												10%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											16 367
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											1:10
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												1%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											16 367
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												11%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											1:10
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-down me-1"></i>
+												1%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											51
+											<span class="badge bg-secondary-transparent text-secondary font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1" style="display: none;"></i>
+												0%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											146
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												20%
+											</span>
+										</div>
+									</td>
+									<td>
+										<div class="d-flex">
+											5 840
+											<span class="badge bg-success-transparent text-success font-weight-semibold rounded-pill px-2 ms-auto">
+												<i class="fa fa-caret-up me-1"></i>
+												20%
+											</span>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<th class="text-center">Всего</th>
+									<th>181 868</th>
+									<th>16 367</th>
+									<th>1:10</th>
+									<th>16 367</th>
+									<th>1:10</th>
+									<th>326</th>
+									<th>960</th>
+									<th>38 400</th>
+								</tr>
+							</tfoot>
+						</table>
+					</div> <!-- /table-responsive -->
+				</div> <!-- /card-body -->
+			</div> <!-- /card -->
+		</div> <!-- /col -->
+	</div> <!-- /row -->
+
+{% endblock content %}

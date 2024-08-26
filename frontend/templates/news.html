@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="row">
+		<div class="col-12">
+			{% block pagination %}
+				{% if posts %}
+					{% for item in posts %}
+						<div class="card mb-4 pagination">
+
+							<div class="card-header d-flex align-items-center card-header-no-bg border-bottom-0">
+								<div class="card-title h6 fw-bold text-uppercase border-start border-primary border-3 ps-2 mb-0">
+									{{ item.title }}
+								</div> <!-- /card-title -->
+
+								<div class="card-options ms-auto">
+									<div class="badge text-bg-outline-secondary">{{ item.date|date_change }}</div>
+								</div> <!-- /card-options -->
+							</div> <!-- /card-header -->
+
+							<div class="card-body">
+								<div class="mb-4 w-50 mx-auto">
+									{% if item.icon %}
+									{% with '/img/news/'|add:item.icon|add:'' as image_static %}
+									<img class="img-fluid rounded" src="{% static image_static %}" alt="">
+									{% endwith %}
+									{% endif %}
+								</div>
+								<p class="mb-0">
+									{{ item.text }}
+								</p>
+							</div>
+
+						</div> <!-- /card -->
+					{% endfor %}
+				{% else %}
+					<div class="row">
+						<div class="col-12">
+							<h2 class="text-center" style="color:grey">Новостей пока нет</h2>
+						</div>
+					</div>
+				{% endif %}
+			{% endblock %}
+			
+			{% if posts.has_other_pages %}
+			<nav id="pagination" class="col align-self-center" aria-label="Page navigation example">
+				<ul class="pagination">
+				{% if posts.has_previous %}
+					<li class="page-item"><a class="page-link" href="?page={{ posts.previous_page_number }}">&laquo;</a></li>
+				{% else %}
+				<li class="page-item disabled"><span class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</span></li>
+				{% endif %}
+				{% for i in posts.paginator.page_range %}
+					{% if i > posts.number|add:-4 and i < posts.number|add:4 %}
+						{% if posts.number == i %}
+							<li class="page-item active" aria-current="page"><a class="page-link" href="#">{{ i }} <span class="sr-only">(current)</span></a></li>
+						{% else %}
+							<li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+						{% endif %}
+					{% endif %}
+				{% endfor %}
+				{% if posts.has_next %}
+					<li class="page-item"><a class="page-link" href="?page={{ posts.next_page_number }}">&raquo;</a></li>
+				{% else %}
+				<li class="page-item disabled"><span class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</span></li>
+				{% endif %}
+				</ul>
+			</nav>
+			{% endif %}
+
+		</div> <!-- /col -->
+	</div>
+{% endblock content %}
